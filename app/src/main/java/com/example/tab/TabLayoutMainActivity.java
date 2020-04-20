@@ -1,6 +1,8 @@
 package com.example.tab;
 
 import android.os.Bundle;
+import android.util.Log;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -9,6 +11,11 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
+
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class TabLayoutMainActivity extends AppCompatActivity {
     //Tab标题
@@ -19,6 +26,10 @@ public class TabLayoutMainActivity extends AppCompatActivity {
     private TabLayout.Tab tabAttwo;
     private TabLayout.Tab tabAtthree;
     private TabLayout.Tab tabAtfour;
+
+    //定时器用于轮训订阅主题
+    private Timer timerSubscribeTopic = null;
+    private TimerTask TimerTaskSubscribeTopic = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +42,81 @@ public class TabLayoutMainActivity extends AppCompatActivity {
 
         initView();
         initData();
+
+        MyMqttClient.sharedCenter().setConnect();
+
+        MyMqttClient.sharedCenter().setOnServerReadStringCallback(new MyMqttClient.OnServerReadStringCallback() {
+            @Override//Topic:主题  Msg.toString():接收的消息  MsgByte:16进制消息
+            public void callback(String Topic, MqttMessage Msg, byte[] MsgByte) {
+                Log.e("MqttMsg", "Topic: "+Topic+" Msg"+Msg.toString() );
+            }
+        });
+        /**
+         * 订阅主题成功回调
+         */
+        MyMqttClient.sharedCenter().setOnServerSubscribeCallback(new MyMqttClient.OnServerSubscribeSuccessCallback() {
+            @Override
+            public void callback(String Topic, int qos) {
+                if (Topic.equals("/sys/a1S917F388O/shebei/thing/service/property/set")){//订阅1111成功
+                    stopTimerSubscribeTopic();//订阅到主题,停止订阅
+                }
+            }
+        });
+        startTimerSubscribeTopic();//定时订阅主题
+        MyMqttClient.sharedCenter().setUnSubscribe("/sys/a1S917F388O/shebei/thing/service/property/set");//取消订阅消息
+    }
+
+    /**
+     * 定时器每隔1S尝试订阅主题
+     */
+    private void startTimerSubscribeTopic(){
+        if (timerSubscribeTopic == null) {
+            timerSubscribeTopic = new Timer();
+        }
+        if (TimerTaskSubscribeTopic == null) {
+            TimerTaskSubscribeTopic = new TimerTask() {
+                @Override
+                public void run() {
+                    MyMqttClient.sharedCenter().setSubscribe("/sys/a1S917F388O/shebei/thing/service/property/set",0);//订阅主题1111,消息等级0
+                }
+            };
+        }
+        if(timerSubscribeTopic != null && TimerTaskSubscribeTopic != null )
+            timerSubscribeTopic.schedule(TimerTaskSubscribeTopic, 0, 1000);
+    }
+
+    private void stopTimerSubscribeTopic(){
+        if (timerSubscribeTopic != null) {
+            timerSubscribeTopic.cancel();
+            timerSubscribeTopic = null;
+        }
+        if (TimerTaskSubscribeTopic != null) {
+            TimerTaskSubscribeTopic.cancel();
+            TimerTaskSubscribeTopic = null;
+        }
+    }
+
+    //当活动不再可见时调用
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+        stopTimerSubscribeTopic();//停止定时器订阅
+    }
+
+    /**
+     * 当处于停止状态的活动需要再次展现给用户的时候，触发该方法
+     */
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        startTimerSubscribeTopic();//定时订阅主题
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopTimerSubscribeTopic();
     }
 
     private void initView() {
@@ -80,7 +166,6 @@ public class TabLayoutMainActivity extends AppCompatActivity {
             return title[position];
         }
     }
-
 
 
 }
