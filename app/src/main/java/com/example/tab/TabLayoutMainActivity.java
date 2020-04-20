@@ -2,6 +2,7 @@ package com.example.tab;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -14,6 +15,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -26,6 +28,7 @@ public class TabLayoutMainActivity extends AppCompatActivity {
     private TabLayout.Tab tabAttwo;
     private TabLayout.Tab tabAtthree;
     private TabLayout.Tab tabAtfour;
+    private int i;
 
     //定时器用于轮训订阅主题
     private Timer timerSubscribeTopic = null;
@@ -49,6 +52,13 @@ public class TabLayoutMainActivity extends AppCompatActivity {
             @Override//Topic:主题  Msg.toString():接收的消息  MsgByte:16进制消息
             public void callback(String Topic, MqttMessage Msg, byte[] MsgByte) {
                 Log.e("MqttMsg", "Topic: "+Topic+" Msg"+Msg.toString() );
+                Data data=Utility.handleDataResponse(Msg.toString());
+                Log.e("Data","Id:"+data.Id);
+                Log.e("Data","Cmd:"+data.Cmd);
+                for ( i=0;i<(data.Para.size());i++) {
+                    Log.e("Data", "Para" +i+ ":"+data.Para.get(i));
+                }
+
             }
         });
         /**
