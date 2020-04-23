@@ -1,10 +1,9 @@
 package com.example.tab;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Data {
-    public String Id;
+    public int Id;
     public String Cmd;
-    public List<String> Para;
+    public List<Integer> Para;
 }
