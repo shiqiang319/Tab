@@ -1,6 +1,10 @@
 package com.example.tab;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -8,10 +12,14 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
+
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class TabLayoutMainActivity extends AppCompatActivity {
+    private SharedPreferences prefs;
     //未选中的Tab图片
     private int[] unSelectTabRes = new int[]{R.drawable.zidong
             , R.drawable.shoudong,R.drawable.zhuangtai, R.drawable.shezhi,R.drawable.xitong};
@@ -39,6 +47,23 @@ public class TabLayoutMainActivity extends AppCompatActivity {
         initListener();
 
         MyMqttClient.sharedCenter().setConnect();
+        MyMqttClient.sharedCenter().setOnServerReadStringCallback(new MyMqttClient.OnServerReadStringCallback() {
+            @Override//Topic:主题  Msg.toString():接收的消息  MsgByte:16进制消息
+            public void callback(String Topic, final MqttMessage Msg, byte[] MsgByte) {
+                Log.e("主活动收到新数据："," Msg"+Msg.toString() );
+                //将数据存储到SharedPreferences中
+                 prefs=getSharedPreferences("datastore",0);
+                SharedPreferences.Editor edit=prefs.edit();
+                edit.putString("data",Msg.toString());
+                edit.commit();
+//                //从SharedPreferences读取数据
+//                 prefs=getActivity().getSharedPreferences("datastore",0);
+//                String dataString=prefs.getString("data","");
+//                Log.e("数据存储",dataString);
+//                final Data newdata=Utility.handleDataResponse(dataString);
+
+            }
+        });
 
         /**
          * 订阅主题成功回调

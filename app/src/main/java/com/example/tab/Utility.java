@@ -28,7 +28,6 @@ public class Utility {
                 "{\"method\":\"thing.event.property.post\",\"id\":\"1111\",\"params\":{\"Id\":1,\"Cmd\":112,\"Para\":[1]},\"version\":\"1.0.0\"}",
                 0,
                 false);
-        Log.e("下拉刷新","已发送查询指令!");
     }
     public static void BtnShow(final Button btn, final String BtnMsg, final String color){
         btn.setText(BtnMsg);
