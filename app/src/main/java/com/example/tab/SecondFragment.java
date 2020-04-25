@@ -134,7 +134,7 @@ public class SecondFragment extends Fragment {
     //展示Data实体类中的数据
     //发酵罐控制部分数据展示
     private void showFjgDataInfo(Data newdata){
-        spin_fajiao.setSelection(newdata.Id-1);
+        spin_fajiao.setSelection(newdata.Id);
         //刷新Button
         if ((newdata.Para.get(4) & 1)==1){
             BtnShow(jiaoban,"搅拌关","#FF0000");
@@ -244,7 +244,7 @@ public class SecondFragment extends Fragment {
     }
     //圈舍控制部分数据展示
     private void showJsDataInfo(Data newdata) {
-        spin_juanshe.setSelection(newdata.Id - 17);
+        spin_juanshe.setSelection(newdata.Id - 16);
         //刷新Button
         if ((newdata.Para.get(4) & 1)==1){
             BtnShow(qingwu1,"清污关","#FF0000");

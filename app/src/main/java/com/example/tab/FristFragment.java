@@ -126,7 +126,7 @@ public class FristFragment extends Fragment {
     }
     //展示Data实体类中的数据
     private void showDataInfo(Data newdata){
-        spinner.setSelection(newdata.Id-1);
+        spinner.setSelection(newdata.Id);
         //刷新TextView
         chenxuduan.setText(newdata.Para.get(1).toString());
         shengyushijian.setText(newdata.Para.get(2).toString());

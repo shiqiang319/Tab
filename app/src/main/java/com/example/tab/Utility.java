@@ -1,6 +1,7 @@
 package com.example.tab;
 
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.util.Log;
 import android.widget.Button;
 
@@ -32,6 +33,11 @@ public class Utility {
     public static void BtnShow(final Button btn, final String BtnMsg, final String color){
         btn.setText(BtnMsg);
         btn.setTextColor(Color.parseColor(color));
+    }
+    //改变shape背景色
+    public static void BtnBgShowColor(final Button btn, final String color){
+        GradientDrawable gd = (GradientDrawable) btn.getBackground();
+        gd.setColor(Color.parseColor(color));
     }
     //构建指令报文
     public static String CommandJson(Integer id,int cmd,int para){
