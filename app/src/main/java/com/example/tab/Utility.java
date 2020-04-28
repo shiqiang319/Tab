@@ -38,6 +38,14 @@ public class Utility {
                 0,
                 false);
     }
+    public static  void xtrequestData(){
+        MyMqttClient.sharedCenter().setSendData(
+                "/sys/a1S917F388O/wenxin/thing/event/property/post",
+                //"/a1yPGkxyv1q/SimuApp/user/update",
+                "{\"method\":\"thing.event.property.post\",\"id\":\"1111\",\"params\":{\"Id\":1,\"Cmd\":42,\"Para\":[1]},\"version\":\"1.0.0\"}",
+                0,
+                false);
+    }
     public static void BtnShow(final Button btn, final String BtnMsg, final String color){
         btn.setText(BtnMsg);
         btn.setTextColor(Color.parseColor(color));
@@ -67,15 +75,15 @@ public class Utility {
 
         return jsonObject.toString();
     }
-    //设置界面构建指令报文
-    public static String SetCommandJson(Integer id,JSONArray jsonArray){
+    //设置/系统界面构建指令报文
+    public static String SetCommandJson(Integer id,Integer cmd,JSONArray jsonArray){
         //创建JSON
         JSONObject jsonObject = new JSONObject();
         JSONObject object_1 = new JSONObject();
         try {
             object_1.put("Para",jsonArray);
             object_1.put("Id",id);
-            object_1.put("Cmd",27);
+            object_1.put("Cmd",cmd);
             jsonObject.put("method", "thing.event.property.post");
             jsonObject.put("params",  object_1);
             jsonObject.put("version", "1.0.0");

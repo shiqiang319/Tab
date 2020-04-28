@@ -16,6 +16,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/app_name"
+                android:textColor="#000000"
                 android:textSize="25sp"
                 android:layout_marginLeft="120dp"
                 android:layout_marginTop="5dp"/>
@@ -31,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:layout_marginLeft="25dp">
+            android:layout_marginLeft="10dp">
             <Button
                 android:id="@+id/btn_jiaobanguan"
                 android:layout_width="100dp"
@@ -55,7 +56,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="25dp">
+            android:layout_marginLeft="10dp">
             <Button
                 android:id="@+id/btn_yureguan"
                 android:layout_width="100dp"
@@ -79,7 +80,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="25dp">
+            android:layout_marginLeft="10dp">
             <Button
                 android:id="@+id/btn_junzhongguan"
                 android:layout_width="100dp"
@@ -103,7 +104,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="25dp">
+            android:layout_marginLeft="10dp">
             <Button
                 android:id="@+id/btn_shusongguan"
                 android:layout_width="100dp"
@@ -127,7 +128,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="25dp">
+            android:layout_marginLeft="10dp">
             <Button
                 android:id="@+id/btn_fudaiguan"
                 android:layout_width="100dp"
@@ -154,6 +155,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/juanshe"
+                android:textColor="#000000"
                 android:textSize="25sp"
                 android:layout_marginLeft="120dp"
                 android:layout_marginTop="15dp"/>
@@ -169,11 +171,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:layout_marginLeft="20dp">
+            android:layout_marginLeft="6dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1#"
+                android:textColor="#000000"
                 android:layout_centerVertical="true"
                 android:textSize="23sp"
                 android:layout_marginLeft="10dp"/>
@@ -187,6 +190,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="2#"
+                android:textColor="#000000"
                 android:layout_centerVertical="true"
                 android:textSize="23sp"
                 android:layout_marginLeft="130dp"/>
@@ -200,6 +204,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="3#"
+                android:textColor="#000000"
                 android:layout_centerVertical="true"
                 android:textSize="23sp"
                 android:layout_marginLeft="250dp"/>
@@ -214,11 +219,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:layout_marginLeft="20dp">
+            android:layout_marginLeft="6dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="4#"
+                android:textColor="#000000"
                 android:layout_centerVertical="true"
                 android:textSize="23sp"
                 android:layout_marginLeft="10dp"/>
@@ -232,6 +238,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="5#"
+                android:textColor="#000000"
                 android:layout_centerVertical="true"
                 android:textSize="23sp"
                 android:layout_marginLeft="130dp"/>
@@ -245,6 +252,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="6#"
+                android:textColor="#000000"
                 android:layout_centerVertical="true"
                 android:textSize="23sp"
                 android:layout_marginLeft="250dp"/>
@@ -259,11 +267,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:layout_marginLeft="20dp">
+            android:layout_marginLeft="10dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="7#"
+                android:textColor="#000000"
                 android:layout_centerVertical="true"
                 android:textSize="23sp"
                 android:layout_marginLeft="10dp"/>
@@ -277,6 +286,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="8#"
+                android:textColor="#000000"
                 android:layout_centerVertical="true"
                 android:textSize="23sp"
                 android:layout_marginLeft="130dp"/>

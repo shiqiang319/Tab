@@ -3,6 +3,7 @@ package com.example.tab;
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -235,6 +236,17 @@ public class FourthlyFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 JSONArray jsonArray=new JSONArray();
+                //判断是否有参数为空
+                if(TextUtils.isEmpty(cxds.getText())||TextUtils.isEmpty(wdsx.getText())||TextUtils.isEmpty(wdxx.getText())
+                ||TextUtils.isEmpty(fwsx.getText())||TextUtils.isEmpty(fwxx.getText())||TextUtils.isEmpty(flxz.getText())
+                ||TextUtils.isEmpty(jzxz.getText())||TextUtils.isEmpty(jbxs.getText())||TextUtils.isEmpty(slxs.getText())
+                ||TextUtils.isEmpty(xlxs.getText())||TextUtils.isEmpty(flxs.getText())||TextUtils.isEmpty(jzxs.getText())
+                ||TextUtils.isEmpty(kjxs.getText())||TextUtils.isEmpty(ydgj.getText())||TextUtils.isEmpty(ydkj.getText())
+                ||TextUtils.isEmpty(edgj.getText())||TextUtils.isEmpty(edkj.getText())||(P1==0)){
+                    Toast.makeText(getActivity(), "有参数未设置，参数配置失败！" , Toast.LENGTH_SHORT).show();
+                    return;
+
+                }
                 Integer P2=Integer.parseInt(cxds.getText().toString().trim());
                 Integer P3=Integer.parseInt(wdsx.getText().toString().trim());
                 Integer P4=Integer.parseInt(wdxx.getText().toString().trim());
@@ -270,20 +282,15 @@ public class FourthlyFragment extends Fragment {
                 jsonArray.put(P16);
                 jsonArray.put(P17);
                 jsonArray.put(P18);
-//                if(P2.toString().length()==0){
-//                    Toast.makeText(getActivity(), "有参数未设置，参数配置失败！" , Toast.LENGTH_SHORT).show();
-//                    return;
-//
-//                }
                 String inputx= spinner.getSelectedItem().toString();
                 Integer x=Integer.parseInt(inputx);
                 MyMqttClient.sharedCenter().setSendData(
                         "/sys/a1S917F388O/wenxin/thing/event/property/post",
                         //"/a1yPGkxyv1q/SimuApp/user/update",
-                        SetCommandJson(x,jsonArray),
+                        SetCommandJson(x,27,jsonArray),
                         0,
                         false);
-                Log.e("EditText","发送数据："+SetCommandJson(x,jsonArray));
+                Log.e("EditText","发送数据："+SetCommandJson(x,27,jsonArray));
                 //从SharedPreferences读取数据
                 prefs=getActivity().getSharedPreferences("datastore",0);
                 String dataString=prefs.getString("data","");
