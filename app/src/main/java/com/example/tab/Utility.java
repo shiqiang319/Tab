@@ -2,7 +2,6 @@ package com.example.tab;
 
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-import android.util.Log;
 import android.widget.Button;
 
 import com.google.gson.Gson;

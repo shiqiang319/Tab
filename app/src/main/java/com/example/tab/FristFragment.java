@@ -2,12 +2,8 @@ package com.example.tab;
 
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.Preference;
-import android.preference.PreferenceManager;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,10 +18,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import org.eclipse.paho.client.mqttv3.MqttMessage;
-
-import java.util.logging.Logger;
 
 import static com.example.tab.Utility.BtnShow;
 
@@ -45,7 +37,6 @@ public class FristFragment extends Fragment {
     private Button   zanting;
     private SwipeRefreshLayout swipeRefresh;
     private SharedPreferences prefs;
-    private boolean isInitial=true;
     private Data newdata;
     private String dataString;
 
@@ -94,7 +85,7 @@ public class FristFragment extends Fragment {
         SpiListener(spinner);
         BtnListener1(shangliao,"启动上料",97,"停止上料",96);
         BtnListener1(xieliao,"启动卸料",99,"停止卸料",96);
-        BtnListener1(qingwu,"启动发酵",49,"停止发酵",96);
+        BtnListener1(fajiao,"启动发酵",49,"停止发酵",96);
         BtnListener1(qingwu,"启动清污",145,"停止清污",147);
         BtnListener2(zidong,"自动运行",161,160);
         BtnListener2(zanting,"暂停运行",162,161);
@@ -172,11 +163,10 @@ public class FristFragment extends Fragment {
         spi.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (isInitial) {
-                    isInitial = false;
+                String cardNumber = getActivity().getResources().getStringArray(R.array.ctype)[position];
+                if (cardNumber.equals("0")) {
                     return;
                 }
-                String cardNumber = getActivity().getResources().getStringArray(R.array.ctype)[position];
                     Toast.makeText(getActivity(), "你正在操作发酵罐：" + cardNumber, Toast.LENGTH_SHORT).show();
                     String inputx= spinner.getSelectedItem().toString();
                     Log.e("设置发酵罐：",inputx);

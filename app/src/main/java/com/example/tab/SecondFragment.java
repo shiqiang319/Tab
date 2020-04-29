@@ -25,8 +25,6 @@ import static com.example.tab.Utility.BtnShow;
 public class SecondFragment extends Fragment {
     private SwipeRefreshLayout swipeRefresh;
     private SharedPreferences prefs;
-    private boolean isInitial=true;
-    private boolean isInitial2=true;
     private Data newdata;
     private Button jiaoban;
     private Button paosui;
@@ -321,11 +319,10 @@ public class SecondFragment extends Fragment {
         spi.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (isInitial) {
-                    isInitial = false;
+                String cardNumber = getActivity().getResources().getStringArray(R.array.ctype)[position];
+                if (cardNumber.equals("0")) {
                     return;
                 }
-                String cardNumber = getActivity().getResources().getStringArray(R.array.ctype)[position];
                 Toast.makeText(getActivity(), "你正在操作发酵罐：" + cardNumber, Toast.LENGTH_SHORT).show();
                 String inputx= spin_fajiao.getSelectedItem().toString();
                 Log.e("手动设置发酵罐：",inputx);
@@ -370,12 +367,17 @@ public class SecondFragment extends Fragment {
                         0,
                         false);
                 Log.e("Btn","发酵罐已发送指令"+ Utility.CommandJson(x,67,para));
-                //从SharedPreferences读取数据
-                prefs=getActivity().getSharedPreferences("datastore",0);
-                String dataString=prefs.getString("data","");
-                Log.e("发酵罐按钮数据读取",dataString);
-                newdata=Utility.handleDataResponse(dataString);
-                showFjgDataInfo(newdata);//刷新界面
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //从SharedPreferences读取数据
+                        prefs=getActivity().getSharedPreferences("datastore",0);
+                        String dataString=prefs.getString("data","");
+                        Log.e("发酵罐按钮数据读取",dataString);
+                        newdata=Utility.handleDataResponse(dataString);
+                        showFjgDataInfo(newdata);//刷新界面
+                    }
+                },1000);
             }
         });
     }
@@ -384,11 +386,10 @@ public class SecondFragment extends Fragment {
         spi.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (isInitial2) {
-                    isInitial2 = false;
+                String cardNumber = getActivity().getResources().getStringArray(R.array.ctype)[position];
+                if (cardNumber.equals("0")) {
                     return;
                 }
-                String cardNumber = getActivity().getResources().getStringArray(R.array.ctype)[position];
                 Toast.makeText(getActivity(), "你正在操作圈舍：" + cardNumber, Toast.LENGTH_SHORT).show();
                 String inputx= spin_juanshe.getSelectedItem().toString();
                 Log.e("手动设置圈舍：",inputx);
@@ -433,12 +434,17 @@ public class SecondFragment extends Fragment {
                         0,
                         false);
                 Log.e("Btn","圈舍已发送指令"+ Utility.CommandJson(z+16,67,para));
-                //从SharedPreferences读取数据
-                prefs=getActivity().getSharedPreferences("datastore",0);
-                String dataString=prefs.getString("data","");
-                Log.e("圈舍按钮数据读取",dataString);
-                newdata=Utility.handleDataResponse(dataString);
-                showJsDataInfo(newdata);//刷新界面
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //从SharedPreferences读取数据
+                        prefs=getActivity().getSharedPreferences("datastore",0);
+                        String dataString=prefs.getString("data","");
+                        Log.e("圈舍按钮数据读取",dataString);
+                        newdata=Utility.handleDataResponse(dataString);
+                        showJsDataInfo(newdata);//刷新界面
+                    }
+                },1000);
             }
         });
     }
@@ -453,6 +459,18 @@ public class SecondFragment extends Fragment {
                 "{\"method\":\"thing.event.property.post\",\"id\":\"1111\",\"params\":{\"Id\":1,\"Cmd\":67,\"Para\":[13]},\"version\":\"1.0.0\"}",
                 0,
                 false);
+                Log.e("Btn","圈舍已发送指令{\"method\":\"thing.event.property.post\",\"params\":{\"Para\":[13],\"Id\":1,\"Cmd\":67},\"version\":\"1.0.0\"}");
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //从SharedPreferences读取数据
+                        prefs=getActivity().getSharedPreferences("datastore",0);
+                        String dataString=prefs.getString("data","");
+                        Log.e("圈舍按钮数据读取",dataString);
+                        newdata=Utility.handleDataResponse(dataString);
+                        showJsDataInfo(newdata);//刷新界面
+                    }
+                },1000);
             }
         });
 

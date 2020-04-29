@@ -57,8 +57,6 @@ public class ThirtlyFragment extends Fragment {
     private TextView cuowu;
     private Spinner spin_fjg;
     private Spinner spin_js;
-    private  boolean js_tag=false;
-    private  boolean fjg_tag=false;
 
     @SuppressLint("ResourceAsColor")
     @Nullable
@@ -128,10 +126,8 @@ public class ThirtlyFragment extends Fragment {
         if (newdata.Id<=12){
             spin_fjg.setSelection(newdata.Id);
             spin_js.setSelection(0);
-            js_tag=true;
         }else {
             spin_fjg.setSelection(0);
-            fjg_tag=true;
             spin_js.setSelection(newdata.Id-16);
         }
         //刷新TextView
@@ -267,12 +263,10 @@ public class ThirtlyFragment extends Fragment {
         spi.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (isInitial||fjg_tag) {
-                    isInitial = false;
-                    fjg_tag=false;
+                String cardNumber = getActivity().getResources().getStringArray(R.array.ctype)[position];
+                if (cardNumber.equals("0")) {
                     return;
                 }
-                String cardNumber = getActivity().getResources().getStringArray(R.array.ctype)[position];
                 Toast.makeText(getActivity(), "你正在操作发酵罐：" + cardNumber, Toast.LENGTH_SHORT).show();
                 String inputx= spin_fjg.getSelectedItem().toString();
                 Log.e("状态-设置发酵罐：",inputx);
@@ -308,19 +302,17 @@ public class ThirtlyFragment extends Fragment {
         spi.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (isInitial2||js_tag) {
-                    isInitial2 = false;
-                    js_tag=false;
+                String cardNumber = getActivity().getResources().getStringArray(R.array.ctype)[position];
+                if (cardNumber.equals("0")) {
                     return;
                 }
-                String cardNumber = getActivity().getResources().getStringArray(R.array.ctype)[position];
                 Toast.makeText(getActivity(), "你正在操作圈舍：" + cardNumber, Toast.LENGTH_SHORT).show();
                 String inputx= spin_js.getSelectedItem().toString();
                 Log.e("状态-设置圈舍：",inputx);
                 Integer z=Integer.parseInt(inputx);
                 MyMqttClient.sharedCenter().setSendData(
                         //"/sys/a1S917F388O/wenxin/thing/event/property/post",
-                        "/a1yPGkxyv1q/SimuApp/user/update",
+                       "/a1yPGkxyv1q/SimuApp/user/update",
                         Utility.CommandJson(z+16,112,1),
                         0,
                         false);

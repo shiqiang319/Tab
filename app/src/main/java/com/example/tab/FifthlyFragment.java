@@ -217,7 +217,7 @@ public class FifthlyFragment extends Fragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         builder.setTitle("请选择：");
-        final String[] cities = {"正常", "停机"};
+        final String[] cities = {" ","正常", "停机"};
 
         builder.setSingleChoiceItems(cities, chedkedItem, new DialogInterface.OnClickListener() {
             @Override

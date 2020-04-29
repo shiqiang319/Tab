@@ -25,18 +25,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
 import org.json.JSONArray;
-
-import static com.example.tab.Utility.BtnBgShowColor;
 import static com.example.tab.Utility.SetCommandJson;
 
 public class FourthlyFragment extends Fragment {
     private int P1=0;
-    private int i;
     private SwipeRefreshLayout swipeRefresh;
     private SharedPreferences prefs;
     private Spinner spinner;
-    private boolean isInitial=true;
-    private boolean isInitial2=true;
     private Data newdata;
     private EditText wdsx;
     private EditText wdxx;
@@ -166,11 +161,10 @@ public class FourthlyFragment extends Fragment {
         spi.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (isInitial) {
-                    isInitial = false;
+                String cardNumber = getActivity().getResources().getStringArray(R.array.ctype)[position];
+                if (cardNumber.equals("0")) {
                     return;
                 }
-                String cardNumber = getActivity().getResources().getStringArray(R.array.ctype)[position];
                 Toast.makeText(getActivity(), "你正在操作发酵罐：" + cardNumber, Toast.LENGTH_SHORT).show();
                 String inputx= spinner.getSelectedItem().toString();
                 Log.e("设置发酵罐：",inputx);

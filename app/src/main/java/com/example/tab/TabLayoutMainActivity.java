@@ -3,10 +3,8 @@ package com.example.tab;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -56,12 +54,6 @@ public class TabLayoutMainActivity extends AppCompatActivity {
                 SharedPreferences.Editor edit=prefs.edit();
                 edit.putString("data",Msg.toString());
                 edit.commit();
-//                //从SharedPreferences读取数据
-//                 prefs=getActivity().getSharedPreferences("datastore",0);
-//                String dataString=prefs.getString("data","");
-//                Log.e("数据存储",dataString);
-//                final Data newdata=Utility.handleDataResponse(dataString);
-
             }
         });
 
@@ -79,7 +71,7 @@ public class TabLayoutMainActivity extends AppCompatActivity {
         });
         startTimerSubscribeTopic();//定时订阅主题
         //MyMqttClient.sharedCenter().setUnSubscribe("/sys/a1S917F388O/shebei/thing/service/property/set");//取消订阅消息
-       MyMqttClient.sharedCenter().setUnSubscribe("/a1yPGkxyv1q/Fjg1/user/get");//取消订阅消息
+        MyMqttClient.sharedCenter().setUnSubscribe("/a1yPGkxyv1q/Fjg1/user/get");//取消订阅消息
     }
 
     private void initView() {
