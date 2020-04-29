@@ -3,6 +3,7 @@ package com.example.tab;
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -95,13 +96,19 @@ public class FourthlyFragment extends Fragment {
             public void onRefresh() {
                 Utility.szrequestData();//发送请求
                 Log.e("下拉刷新","设置—已发送查询指令!");
-                //从SharedPreferences读取数据
-                prefs=getActivity().getSharedPreferences("datastore",0);
-                String dataString=prefs.getString("data","");
-                Log.e("设置-数据读取",dataString);
-                newdata=Utility.handleDataResponse(dataString);
-                showDataInfo(newdata);
-                swipeRefresh.setRefreshing(false);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //从SharedPreferences读取数据
+                        prefs=getActivity().getSharedPreferences("datastore",0);
+                        String dataString=prefs.getString("data","");
+                        Log.e("设置-数据读取",dataString);
+                        newdata=Utility.handleDataResponse(dataString);
+                        showDataInfo(newdata);
+                        swipeRefresh.setRefreshing(false);
+                    }
+                },1000);
+
             }
         });
         SpiListener(spinner);
@@ -169,17 +176,22 @@ public class FourthlyFragment extends Fragment {
                 Log.e("设置发酵罐：",inputx);
                 Integer x=Integer.parseInt(inputx);
                 MyMqttClient.sharedCenter().setSendData(
-                        "/sys/a1S917F388O/wenxin/thing/event/property/post",
-                        //"/a1yPGkxyv1q/SimuApp/user/update",
+                        //"/sys/a1S917F388O/wenxin/thing/event/property/post",
+                        "/a1yPGkxyv1q/SimuApp/user/update",
                         Utility.CommandJson(x,43,1),
                         0,
                         false);
-                //从SharedPreferences读取数据
-                prefs=getActivity().getSharedPreferences("datastore",0);
-                String dataString=prefs.getString("data","");
-                Log.e("设置（Spinner）返回数据读取",dataString);
-                newdata=Utility.handleDataResponse(dataString);
-                showDataInfo(newdata);//刷新界面
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //从SharedPreferences读取数据
+                        prefs=getActivity().getSharedPreferences("datastore",0);
+                        String dataString=prefs.getString("data","");
+                        Log.e("设置（Spinner）返回数据读取",dataString);
+                        newdata=Utility.handleDataResponse(dataString);
+                        showDataInfo(newdata);//刷新界面
+                    }
+                },1000);
             }
 
             @Override
@@ -285,18 +297,23 @@ public class FourthlyFragment extends Fragment {
                 String inputx= spinner.getSelectedItem().toString();
                 Integer x=Integer.parseInt(inputx);
                 MyMqttClient.sharedCenter().setSendData(
-                        "/sys/a1S917F388O/wenxin/thing/event/property/post",
-                        //"/a1yPGkxyv1q/SimuApp/user/update",
+                        //"/sys/a1S917F388O/wenxin/thing/event/property/post",
+                        "/a1yPGkxyv1q/SimuApp/user/update",
                         SetCommandJson(x,27,jsonArray),
                         0,
                         false);
                 Log.e("EditText","发送数据："+SetCommandJson(x,27,jsonArray));
-                //从SharedPreferences读取数据
-                prefs=getActivity().getSharedPreferences("datastore",0);
-                String dataString=prefs.getString("data","");
-                Log.e("发酵罐按钮数据读取",dataString);
-                newdata=Utility.handleDataResponse(dataString);
-               showDataInfo(newdata);//刷新界面
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //从SharedPreferences读取数据
+                        prefs=getActivity().getSharedPreferences("datastore",0);
+                        String dataString=prefs.getString("data","");
+                        Log.e("发酵罐按钮数据读取",dataString);
+                        newdata=Utility.handleDataResponse(dataString);
+                        showDataInfo(newdata);//刷新界面
+                    }
+                },1000);
             }
         });
     }

@@ -3,6 +3,7 @@ package com.example.tab;
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -92,13 +93,18 @@ public class SecondFragment extends Fragment {
             public void onRefresh() {
                 Utility.requestData();//发送请求
                 Log.e("下拉刷新","手动已发送查询指令!");
-                //从SharedPreferences读取数据
-                prefs=getActivity().getSharedPreferences("datastore",0);
-                String dataString=prefs.getString("data","");
-                Log.e("手动数据读取",dataString);
-                newdata=Utility.handleDataResponse(dataString);
-                showFjgDataInfo(newdata);
-                swipeRefresh.setRefreshing(false);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //从SharedPreferences读取数据
+                        prefs=getActivity().getSharedPreferences("datastore",0);
+                        String dataString=prefs.getString("data","");
+                        Log.e("手动数据读取",dataString);
+                        newdata=Utility.handleDataResponse(dataString);
+                        showFjgDataInfo(newdata);
+                        swipeRefresh.setRefreshing(false);
+                    }
+                },1000);
             }
         });
         //发酵罐控制部分按钮点击
@@ -325,17 +331,22 @@ public class SecondFragment extends Fragment {
                 Log.e("手动设置发酵罐：",inputx);
                 Integer x=Integer.parseInt(inputx);
                 MyMqttClient.sharedCenter().setSendData(
-                        "/sys/a1S917F388O/wenxin/thing/event/property/post",
-                        //"/a1yPGkxyv1q/SimuApp/user/update",
+                        //"/sys/a1S917F388O/wenxin/thing/event/property/post",
+                        "/a1yPGkxyv1q/SimuApp/user/update",
                         Utility.CommandJson(x,112,1),
                         0,
                         false);
-                //从SharedPreferences读取数据
-                prefs=getActivity().getSharedPreferences("datastore",0);
-                String dataString=prefs.getString("data","");
-                Log.e("（手动）发酵罐Spinner返回数据读取",dataString);
-                newdata=Utility.handleDataResponse(dataString);
-                showFjgDataInfo(newdata);//刷新界面
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //从SharedPreferences读取数据
+                        prefs=getActivity().getSharedPreferences("datastore",0);
+                        String dataString=prefs.getString("data","");
+                        Log.e("（手动）发酵罐Spinner返回数据读取",dataString);
+                        newdata=Utility.handleDataResponse(dataString);
+                        showFjgDataInfo(newdata);//刷新界面
+                    }
+                },1000);
             }
 
             @Override
@@ -353,8 +364,8 @@ public class SecondFragment extends Fragment {
                 String inputx= spin_fajiao.getSelectedItem().toString();
                 Integer x=Integer.parseInt(inputx);
                 MyMqttClient.sharedCenter().setSendData(
-                        "/sys/a1S917F388O/wenxin/thing/event/property/post",
-                        //"/a1yPGkxyv1q/SimuApp/user/update",
+                        //"/sys/a1S917F388O/wenxin/thing/event/property/post",
+                        "/a1yPGkxyv1q/SimuApp/user/update",
                         Utility.CommandJson(x,67,para),
                         0,
                         false);
@@ -383,17 +394,22 @@ public class SecondFragment extends Fragment {
                 Log.e("手动设置圈舍：",inputx);
                 Integer z=Integer.parseInt(inputx);
                 MyMqttClient.sharedCenter().setSendData(
-                        "/sys/a1S917F388O/wenxin/thing/event/property/post",
-                        //"/a1yPGkxyv1q/SimuApp/user/update",
+                        //"/sys/a1S917F388O/wenxin/thing/event/property/post",
+                        "/a1yPGkxyv1q/SimuApp/user/update",
                         Utility.CommandJson(z+16,112,1),
                         0,
                         false);
-                //从SharedPreferences读取数据
-                prefs=getActivity().getSharedPreferences("datastore",0);
-                String dataString=prefs.getString("data","");
-                Log.e("（手动）圈舍Spinner返回数据读取",dataString);
-                newdata=Utility.handleDataResponse(dataString);
-                showJsDataInfo(newdata);//刷新界面
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //从SharedPreferences读取数据
+                        prefs=getActivity().getSharedPreferences("datastore",0);
+                        String dataString=prefs.getString("data","");
+                        Log.e("（手动）圈舍Spinner返回数据读取",dataString);
+                        newdata=Utility.handleDataResponse(dataString);
+                        showJsDataInfo(newdata);//刷新界面
+                    }
+                },1000);
             }
 
             @Override
@@ -411,8 +427,8 @@ public class SecondFragment extends Fragment {
                 String inputz= spin_juanshe.getSelectedItem().toString();
                 Integer z=Integer.parseInt(inputz);
                 MyMqttClient.sharedCenter().setSendData(
-                        "/sys/a1S917F388O/wenxin/thing/event/property/post",
-                        //"/a1yPGkxyv1q/SimuApp/user/update",
+                        //"/sys/a1S917F388O/wenxin/thing/event/property/post",
+                        "/a1yPGkxyv1q/SimuApp/user/update",
                         Utility.CommandJson(z+16,67,para),
                         0,
                         false);
@@ -432,8 +448,8 @@ public class SecondFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 MyMqttClient.sharedCenter().setSendData(
-                "/sys/a1S917F388O/wenxin/thing/event/property/post",
-                //"/a1yPGkxyv1q/SimuApp/user/update",
+                //"/sys/a1S917F388O/wenxin/thing/event/property/post",
+                "/a1yPGkxyv1q/SimuApp/user/update",
                 "{\"method\":\"thing.event.property.post\",\"id\":\"1111\",\"params\":{\"Id\":1,\"Cmd\":67,\"Para\":[13]},\"version\":\"1.0.0\"}",
                 0,
                 false);

@@ -24,24 +24,24 @@ public class Utility {
     }
     public static  void requestData(){
         MyMqttClient.sharedCenter().setSendData(
-                "/sys/a1S917F388O/wenxin/thing/event/property/post",
-                //"/a1yPGkxyv1q/SimuApp/user/update",
+                //"/sys/a1S917F388O/wenxin/thing/event/property/post",
+                "/a1yPGkxyv1q/SimuApp/user/update",
                 "{\"method\":\"thing.event.property.post\",\"id\":\"1111\",\"params\":{\"Id\":1,\"Cmd\":112,\"Para\":[1]},\"version\":\"1.0.0\"}",
                 0,
                 false);
     }
     public static  void szrequestData(){
         MyMqttClient.sharedCenter().setSendData(
-                "/sys/a1S917F388O/wenxin/thing/event/property/post",
-                //"/a1yPGkxyv1q/SimuApp/user/update",
+                //"/sys/a1S917F388O/wenxin/thing/event/property/post",
+                "/a1yPGkxyv1q/SimuApp/user/update",
                 "{\"method\":\"thing.event.property.post\",\"id\":\"1111\",\"params\":{\"Id\":1,\"Cmd\":43,\"Para\":[1]},\"version\":\"1.0.0\"}",
                 0,
                 false);
     }
     public static  void xtrequestData(){
         MyMqttClient.sharedCenter().setSendData(
-                "/sys/a1S917F388O/wenxin/thing/event/property/post",
-                //"/a1yPGkxyv1q/SimuApp/user/update",
+                //"/sys/a1S917F388O/wenxin/thing/event/property/post",
+                "/a1yPGkxyv1q/SimuApp/user/update",
                 "{\"method\":\"thing.event.property.post\",\"id\":\"1111\",\"params\":{\"Id\":1,\"Cmd\":42,\"Para\":[1]},\"version\":\"1.0.0\"}",
                 0,
                 false);

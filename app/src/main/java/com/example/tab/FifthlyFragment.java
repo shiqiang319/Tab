@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -69,13 +70,18 @@ public class FifthlyFragment extends Fragment {
             public void onRefresh() {
                 Utility.xtrequestData();//发送请求
                 Log.e("下拉刷新","系统—已发送查询指令!");
-                //从SharedPreferences读取数据
-                prefs=getActivity().getSharedPreferences("datastore",0);
-                String dataString=prefs.getString("data","");
-                Log.e("设置-数据读取",dataString);
-                newdata=Utility.handleDataResponse(dataString);
-                showDataInfo(newdata);
-                swipeRefresh.setRefreshing(false);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //从SharedPreferences读取数据
+                        prefs=getActivity().getSharedPreferences("datastore",0);
+                        String dataString=prefs.getString("data","");
+                        Log.e("设置-数据读取",dataString);
+                        newdata=Utility.handleDataResponse(dataString);
+                        showDataInfo(newdata);
+                        swipeRefresh.setRefreshing(false);
+                    }
+                },1000);
             }
         });
         //使用授权为不可编辑
@@ -143,18 +149,23 @@ public class FifthlyFragment extends Fragment {
                 jsonArray.put(P9);
                 jsonArray.put(P10);
                 MyMqttClient.sharedCenter().setSendData(
-                        "/sys/a1S917F388O/wenxin/thing/event/property/post",
-                        //"/a1yPGkxyv1q/SimuApp/user/update",
+                        //"/sys/a1S917F388O/wenxin/thing/event/property/post",
+                        "/a1yPGkxyv1q/SimuApp/user/update",
                         SetCommandJson(1,26,jsonArray),
                         0,
                         false);
                 Log.e("EditText","发送数据："+SetCommandJson(1,26,jsonArray));
-                //从SharedPreferences读取数据
-                prefs=getActivity().getSharedPreferences("datastore",0);
-                String dataString=prefs.getString("data","");
-                Log.e("数据读取",dataString);
-                newdata=Utility.handleDataResponse(dataString);
-                showDataInfo(newdata);//刷新界面
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //从SharedPreferences读取数据
+                        prefs=getActivity().getSharedPreferences("datastore",0);
+                        String dataString=prefs.getString("data","");
+                        Log.e("数据读取",dataString);
+                        newdata=Utility.handleDataResponse(dataString);
+                        showDataInfo(newdata);//刷新界面
+                    }
+                },1000);
             }
         });
     }

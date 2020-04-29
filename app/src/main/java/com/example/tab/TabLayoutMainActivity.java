@@ -71,15 +71,15 @@ public class TabLayoutMainActivity extends AppCompatActivity {
         MyMqttClient.sharedCenter().setOnServerSubscribeCallback(new MyMqttClient.OnServerSubscribeSuccessCallback() {
             @Override
             public void callback(String Topic, int qos) {
-                if (Topic.equals("/sys/a1S917F388O/shebei/thing/service/property/set")){//订阅1111成功
-                 //if (Topic.equals("/a1yPGkxyv1q/Fjg1/user/get")){//订阅1111成功
+                //if (Topic.equals("/sys/a1S917F388O/shebei/thing/service/property/set")){//订阅1111成功
+                 if (Topic.equals("/a1yPGkxyv1q/Fjg1/user/get")){//订阅1111成功
                     stopTimerSubscribeTopic();//订阅到主题,停止订阅
                 }
             }
         });
         startTimerSubscribeTopic();//定时订阅主题
-        MyMqttClient.sharedCenter().setUnSubscribe("/sys/a1S917F388O/shebei/thing/service/property/set");//取消订阅消息
-       //MyMqttClient.sharedCenter().setUnSubscribe("/a1yPGkxyv1q/Fjg1/user/get");//取消订阅消息
+        //MyMqttClient.sharedCenter().setUnSubscribe("/sys/a1S917F388O/shebei/thing/service/property/set");//取消订阅消息
+       MyMqttClient.sharedCenter().setUnSubscribe("/a1yPGkxyv1q/Fjg1/user/get");//取消订阅消息
     }
 
     private void initView() {
@@ -179,8 +179,8 @@ public class TabLayoutMainActivity extends AppCompatActivity {
             TimerTaskSubscribeTopic = new TimerTask() {
                 @Override
                 public void run() {
-                    //MyMqttClient.sharedCenter().setSubscribe("/a1yPGkxyv1q/Fjg1/user/get",0);//订阅主题1111,消息等级0
-                    MyMqttClient.sharedCenter().setSubscribe("/sys/a1S917F388O/shebei/thing/service/property/set",0);//订阅主题1111,消息等级0
+                    MyMqttClient.sharedCenter().setSubscribe("/a1yPGkxyv1q/Fjg1/user/get",0);//订阅主题1111,消息等级0
+                    //MyMqttClient.sharedCenter().setSubscribe("/sys/a1S917F388O/shebei/thing/service/property/set",0);//订阅主题1111,消息等级0
                 }
             };
         }

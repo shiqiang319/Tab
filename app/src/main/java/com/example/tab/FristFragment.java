@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
@@ -46,6 +47,7 @@ public class FristFragment extends Fragment {
     private SharedPreferences prefs;
     private boolean isInitial=true;
     private Data newdata;
+    private String dataString;
 
     @SuppressLint("ResourceAsColor")
     @Nullable
@@ -73,45 +75,20 @@ public class FristFragment extends Fragment {
             public void onRefresh() {
                 Utility.requestData();//发送请求
                 Log.e("下拉刷新","自动已发送查询指令!");
-                //从SharedPreferences读取数据
-                prefs=getActivity().getSharedPreferences("datastore",0);
-                String dataString=prefs.getString("data","");
-                Log.e("自动数据读取",dataString);
-                newdata=Utility.handleDataResponse(dataString);
-                showDataInfo(newdata);
-                swipeRefresh.setRefreshing(false);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //从SharedPreferences读取数据
+                        prefs=getActivity().getSharedPreferences("datastore",0);
+                         dataString=prefs.getString("data","");
+                        Log.e("自动数据读取",dataString);
+                        newdata=Utility.handleDataResponse(dataString);
+                        showDataInfo(newdata);
+                        swipeRefresh.setRefreshing(false);
+                    }
+                },1000);
             }
         });
-        //刷新界面
-//        MyMqttClient.sharedCenter().setOnServerReadStringCallback(new MyMqttClient.OnServerReadStringCallback() {
-//            @Override//Topic:主题  Msg.toString():接收的消息  MsgByte:16进制消息
-//            public void callback(String Topic, final MqttMessage Msg, byte[] MsgByte) {
-//                Log.e("自动收到新数据："," Msg"+Msg.toString() );
-////                //将数据存储到SharedPreferences中
-////                 prefs=getActivity().getSharedPreferences("datastore",0);
-////                SharedPreferences.Editor edit=prefs.edit();
-////                edit.putString("data",Msg.toString());
-////                edit.commit();
-//                //从SharedPreferences读取数据
-//                 prefs=getActivity().getSharedPreferences("datastore",0);
-//                String dataString=prefs.getString("data","");
-//                Log.e("数据存储",dataString);
-////                final Data newdata=Utility.handleDataResponse(dataString);
-//                final Data newdata=Utility.handleDataResponse(Msg.toString());
-//                if (newdata!=null){
-//                    getActivity().runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            showDataInfo(newdata);
-//                            swipeRefresh.setRefreshing(false);
-//                        }
-//                    });
-//                }else {
-//                    Toast.makeText(getActivity(), "数据请求失败！" , Toast.LENGTH_SHORT).show();
-//                }
-//
-//            }
-//        });
 
         //按钮点击
         SpiListener(spinner);
@@ -205,17 +182,23 @@ public class FristFragment extends Fragment {
                     Log.e("设置发酵罐：",inputx);
                     Integer x=Integer.parseInt(inputx);
                     MyMqttClient.sharedCenter().setSendData(
-                           "/sys/a1S917F388O/wenxin/thing/event/property/post",
-                            //"/a1yPGkxyv1q/SimuApp/user/update",
+                           //"/sys/a1S917F388O/wenxin/thing/event/property/post",
+                            "/a1yPGkxyv1q/SimuApp/user/update",
                             Utility.CommandJson(x,112,1),
                             0,
                             false);
-                //从SharedPreferences读取数据
-                prefs=getActivity().getSharedPreferences("datastore",0);
-                String dataString=prefs.getString("data","");
-                Log.e("自动（Spinner）返回数据读取",dataString);
-                newdata=Utility.handleDataResponse(dataString);
-                showDataInfo(newdata);//刷新界面
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            //从SharedPreferences读取数据
+                            prefs=getActivity().getSharedPreferences("datastore",0);
+                            String dataString=prefs.getString("data","");
+                            Log.e("自动（Spinner）返回数据读取",dataString);
+                            newdata=Utility.handleDataResponse(dataString);
+                            showDataInfo(newdata);//刷新界面
+                        }
+                    },1000);
+
             }
 
             @Override
@@ -239,18 +222,23 @@ public class FristFragment extends Fragment {
                 }else if (btn.getText().equals(function2)){para=f2parn;}
 
                 MyMqttClient.sharedCenter().setSendData(
-                        "/sys/a1S917F388O/wenxin/thing/event/property/post",
-                        //"/a1yPGkxyv1q/SimuApp/user/update",
+                        //"/sys/a1S917F388O/wenxin/thing/event/property/post",
+                        "/a1yPGkxyv1q/SimuApp/user/update",
                         Utility.CommandJson(x,97,para),
                         0,
                         false);
                 Log.e("Btn","已发送指令"+ Utility.CommandJson(x,97,para));
-                //从SharedPreferences读取数据
-                prefs=getActivity().getSharedPreferences("datastore",0);
-                String dataString=prefs.getString("data","");
-                Log.e("自动（按钮1）数据读取",dataString);
-                newdata=Utility.handleDataResponse(dataString);
-                showDataInfo(newdata);//刷新界面
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //从SharedPreferences读取数据
+                        prefs=getActivity().getSharedPreferences("datastore",0);
+                        String dataString=prefs.getString("data","");
+                        Log.e("自动（按钮1）数据读取",dataString);
+                        newdata=Utility.handleDataResponse(dataString);
+                        showDataInfo(newdata);//刷新界面
+                    }
+                },1000);
             }
         });
 
@@ -262,25 +250,30 @@ public class FristFragment extends Fragment {
             public void onClick(View v) {
                 if (btn.getText().equals(function)) {
                     MyMqttClient.sharedCenter().setSendData(
-                            "/sys/a1S917F388O/wenxin/thing/event/property/post",
-                            //"/a1yPGkxyv1q/SimuApp/user/update",
+                            //"/sys/a1S917F388O/wenxin/thing/event/property/post",
+                            "/a1yPGkxyv1q/SimuApp/user/update",
                             Utility.CommandJson(1, 97,para1),
                             0,
                             false);
                 } else {
                     MyMqttClient.sharedCenter().setSendData(
-                            "/sys/a1S917F388O/wenxin/thing/event/property/post",
-                            //"/a1yPGkxyv1q/SimuApp/user/update",
+                            //"/sys/a1S917F388O/wenxin/thing/event/property/post",
+                            "/a1yPGkxyv1q/SimuApp/user/update",
                             Utility.CommandJson(1, 97,para2),
                             0,
                             false);
                 }
-                //从SharedPreferences读取数据
-                prefs=getActivity().getSharedPreferences("datastore",0);
-                String dataString=prefs.getString("data","");
-                Log.e("自动（按钮2）数据读取",dataString);
-                newdata=Utility.handleDataResponse(dataString);
-                showDataInfo(newdata);//刷新界面
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //从SharedPreferences读取数据
+                        prefs=getActivity().getSharedPreferences("datastore",0);
+                        String dataString=prefs.getString("data","");
+                        Log.e("自动（按钮2）数据读取",dataString);
+                        newdata=Utility.handleDataResponse(dataString);
+                        showDataInfo(newdata);//刷新界面
+                    }
+                },1000);
             }
         });
     }
