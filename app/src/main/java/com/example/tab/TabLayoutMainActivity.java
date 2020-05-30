@@ -16,7 +16,20 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class TabLayoutMainActivity extends AppCompatActivity {
+import me.jessyan.autosize.AutoSizeConfig;
+import me.jessyan.autosize.internal.CustomAdapt;
+
+public class TabLayoutMainActivity extends AppCompatActivity implements CustomAdapt {
+    //自定义活动的自适应参数
+    @Override
+    public boolean isBaseOnWidth() {
+        return false;
+    }
+
+    @Override
+    public float getSizeInDp() {
+        return 667;
+    }
     private SharedPreferences prefs;
     //未选中的Tab图片
     private int[] unSelectTabRes = new int[]{R.drawable.zidong
@@ -128,6 +141,8 @@ public class TabLayoutMainActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
     //自定义适配器
     public class MyFragmentPagerAdapter extends FragmentPagerAdapter {

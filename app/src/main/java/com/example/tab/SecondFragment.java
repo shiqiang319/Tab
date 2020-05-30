@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -52,6 +53,7 @@ public class SecondFragment extends Fragment {
     private Button jiebodai;
     private Spinner spin_fajiao;
     private Spinner spin_juanshe;
+    private boolean isGetData = false;
     @SuppressLint("ResourceAsColor")
     @Nullable
     @Override
@@ -224,7 +226,7 @@ public class SecondFragment extends Fragment {
         }else {
             BtnShow(shusong,"输送开","#00AA44");
         }
-        if ((newdata.Para.get(4) & 8291)==8291){
+        if ((newdata.Para.get(4) & 8192)==8192){
             BtnShow(jieru,"接入关","#FF0000");
 
 
@@ -475,5 +477,31 @@ public class SecondFragment extends Fragment {
         });
 
     }
+//    @Override
+//    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
+//        //   进入当前Fragment
+//        if (enter && !isGetData) {
+//            isGetData = true;
+//            //   这里可以做网络请求或者需要的数据刷新操作
+////            GetData();
+//            Utility.requestData();//发送请求
+//            Log.e("下拉刷新","手动已发送查询指令!");
+//            new Handler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    //从SharedPreferences读取数据
+//                    prefs=getActivity().getSharedPreferences("datastore",0);
+//                    String dataString=prefs.getString("data","");
+//                    Log.e("手动数据读取",dataString);
+//                    newdata=Utility.handleDataResponse(dataString);
+//                    showFjgDataInfo(newdata);
+//                    swipeRefresh.setRefreshing(false);
+//                }
+//            },1000);
+//        } else {
+//            isGetData = false;
+//        }
+//        return super.onCreateAnimation(transit, enter, nextAnim);
+//    }
 
 }

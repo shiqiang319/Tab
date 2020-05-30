@@ -19,6 +19,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import me.jessyan.autosize.internal.CustomAdapt;
+
 import static com.example.tab.Utility.BtnShow;
 
 public class FristFragment extends Fragment {
@@ -71,7 +73,7 @@ public class FristFragment extends Fragment {
                     public void run() {
                         //从SharedPreferences读取数据
                         prefs=getActivity().getSharedPreferences("datastore",0);
-                         dataString=prefs.getString("data","");
+                        dataString=prefs.getString("data","");
                         Log.e("自动数据读取",dataString);
                         newdata=Utility.handleDataResponse(dataString);
                         showDataInfo(newdata);
