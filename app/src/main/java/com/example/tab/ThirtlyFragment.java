@@ -57,6 +57,7 @@ public class ThirtlyFragment extends Fragment {
     private TextView cuowu;
     private Spinner spin_fjg;
     private Spinner spin_js;
+    private  String dataString;
 
     @SuppressLint("ResourceAsColor")
     @Nullable
@@ -106,10 +107,15 @@ public class ThirtlyFragment extends Fragment {
                     public void run() {
                         //从SharedPreferences读取数据
                         prefs=getActivity().getSharedPreferences("datastore",0);
-                        String dataString=prefs.getString("data","");
-                        Log.e("状态-数据读取",dataString);
-                        newdata=Utility.handleDataResponse(dataString);
-                        showDataInfo(newdata);
+                        dataString=prefs.getString("data","");
+                        if (dataString!=""){
+                            Log.e("状态-数据读取",dataString);
+                            newdata=Utility.handleDataResponse(dataString);
+                            showDataInfo(newdata);
+                            prefs.edit().clear().commit();//清除SharedPreferences数据
+                        }else {
+                            Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                        }
                         swipeRefresh.setRefreshing(false);
                     }
                 },1000);
@@ -283,9 +289,15 @@ public class ThirtlyFragment extends Fragment {
                         //从SharedPreferences读取数据
                         prefs=getActivity().getSharedPreferences("datastore",0);
                         String dataString=prefs.getString("data","");
-                        Log.e("（状态）发酵罐Spinner返回数据读取",dataString);
-                        newdata=Utility.handleDataResponse(dataString);
-                        showDataInfo(newdata);//刷新界面
+                        if (dataString!=""){
+                            Log.e("（状态）发酵罐Spinner返回数据读取",dataString);
+                            newdata=Utility.handleDataResponse(dataString);
+                            showDataInfo(newdata);//刷新界面
+                            prefs.edit().clear().commit();//清除SharedPreferences数据
+                        }else {
+                            Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                        }
+
                     }
                 },1000);
             }
@@ -301,7 +313,7 @@ public class ThirtlyFragment extends Fragment {
     private void JsSpiListener(final  Spinner spi){
         spi.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, final long id) {
                 String cardNumber = getActivity().getResources().getStringArray(R.array.ctype)[position];
                 if (cardNumber.equals("0")) {
                     return;
@@ -322,9 +334,15 @@ public class ThirtlyFragment extends Fragment {
                         //从SharedPreferences读取数据
                         prefs=getActivity().getSharedPreferences("datastore",0);
                         String dataString=prefs.getString("data","");
-                        Log.e("状态-圈舍Spinner返回数据读取",dataString);
-                        newdata=Utility.handleDataResponse(dataString);
-                        showDataInfo(newdata);//刷新界面
+                        if (dataString!=""){
+                            Log.e("状态-圈舍Spinner返回数据读取",dataString);
+                            newdata=Utility.handleDataResponse(dataString);
+                            showDataInfo(newdata);//刷新界面
+                            prefs.edit().clear().commit();//清除SharedPreferences数据
+                        }else {
+                            Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                        }
+
                     }
                 },1000);
             }

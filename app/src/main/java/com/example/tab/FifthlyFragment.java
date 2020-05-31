@@ -45,6 +45,7 @@ public class FifthlyFragment extends Fragment {
     private Button   btnsq;
     private Button   canshu;
     private int chedkedItem = 0;
+    private String dataString;
     @SuppressLint("ResourceAsColor")
     @Nullable
     @Override
@@ -75,10 +76,15 @@ public class FifthlyFragment extends Fragment {
                     public void run() {
                         //从SharedPreferences读取数据
                         prefs=getActivity().getSharedPreferences("datastore",0);
-                        String dataString=prefs.getString("data","");
-                        Log.e("设置-数据读取",dataString);
-                        newdata=Utility.handleDataResponse(dataString);
-                        showDataInfo(newdata);
+                        dataString=prefs.getString("data","");
+                        if (dataString!=""){
+                            Log.e("设置-数据读取",dataString);
+                            newdata=Utility.handleDataResponse(dataString);
+                            showDataInfo(newdata);
+                            prefs.edit().clear().commit();//清除SharedPreferences数据
+                        }else {
+                            Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                        }
                         swipeRefresh.setRefreshing(false);
                     }
                 },1000);
@@ -161,9 +167,15 @@ public class FifthlyFragment extends Fragment {
                         //从SharedPreferences读取数据
                         prefs=getActivity().getSharedPreferences("datastore",0);
                         String dataString=prefs.getString("data","");
-                        Log.e("数据读取",dataString);
-                        newdata=Utility.handleDataResponse(dataString);
-                        showDataInfo(newdata);//刷新界面
+                        if (dataString!=""){
+                            Log.e("数据读取",dataString);
+                            newdata=Utility.handleDataResponse(dataString);
+                            showDataInfo(newdata);//刷新界面
+                            prefs.edit().clear().commit();//清除SharedPreferences数据
+                        }else {
+                            Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                        }
+
                     }
                 },1000);
             }

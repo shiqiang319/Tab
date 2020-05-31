@@ -1,6 +1,7 @@
 package com.example.tab;
 
 import android.util.Log;
+import android.widget.Toast;
 
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -119,6 +120,7 @@ public class MyMqttClient {
 
     public void setConnect(){
         new Thread(new Runnable() {
+
             @Override
             public void run() {
                 while(ConnectFlage) {
@@ -132,6 +134,7 @@ public class MyMqttClient {
                                     ConnectedCallback.callback();
                                 ConnectFlage = false;
                                 Log.e(TAG, "run: Connect Success");
+                                //Toast.makeText(,"服务器连接成功！",Toast.LENGTH_SHORT).show();
                             }
                         }
                     } catch (Exception e) {

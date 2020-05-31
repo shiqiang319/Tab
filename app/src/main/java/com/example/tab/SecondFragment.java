@@ -53,6 +53,7 @@ public class SecondFragment extends Fragment {
     private Button jiebodai;
     private Spinner spin_fajiao;
     private Spinner spin_juanshe;
+    private String dataString;
     private boolean isGetData = false;
     @SuppressLint("ResourceAsColor")
     @Nullable
@@ -98,10 +99,15 @@ public class SecondFragment extends Fragment {
                     public void run() {
                         //从SharedPreferences读取数据
                         prefs=getActivity().getSharedPreferences("datastore",0);
-                        String dataString=prefs.getString("data","");
-                        Log.e("手动数据读取",dataString);
-                        newdata=Utility.handleDataResponse(dataString);
-                        showFjgDataInfo(newdata);
+                        dataString=prefs.getString("data","");
+                        if (dataString!=""){
+                            Log.e("手动数据读取",dataString);
+                            newdata=Utility.handleDataResponse(dataString);
+                            showFjgDataInfo(newdata);
+                            prefs.edit().clear().commit();//清除SharedPreferences数据
+                        }else {
+                            Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                        }
                         swipeRefresh.setRefreshing(false);
                     }
                 },1000);
@@ -341,9 +347,14 @@ public class SecondFragment extends Fragment {
                         //从SharedPreferences读取数据
                         prefs=getActivity().getSharedPreferences("datastore",0);
                         String dataString=prefs.getString("data","");
-                        Log.e("（手动）发酵罐Spinner返回数据读取",dataString);
-                        newdata=Utility.handleDataResponse(dataString);
-                        showFjgDataInfo(newdata);//刷新界面
+                        if (dataString!=""){
+                            Log.e("（手动）发酵罐Spinner返回数据读取",dataString);
+                            newdata=Utility.handleDataResponse(dataString);
+                            showFjgDataInfo(newdata);//刷新界面
+                            prefs.edit().clear().commit();//清除SharedPreferences数据
+                        }else {
+                            Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 },1000);
             }
@@ -375,9 +386,14 @@ public class SecondFragment extends Fragment {
                         //从SharedPreferences读取数据
                         prefs=getActivity().getSharedPreferences("datastore",0);
                         String dataString=prefs.getString("data","");
-                        Log.e("发酵罐按钮数据读取",dataString);
-                        newdata=Utility.handleDataResponse(dataString);
-                        showFjgDataInfo(newdata);//刷新界面
+                        if (dataString!=""){
+                            Log.e("发酵罐按钮数据读取",dataString);
+                            newdata=Utility.handleDataResponse(dataString);
+                            showFjgDataInfo(newdata);//刷新界面
+                            prefs.edit().clear().commit();//清除SharedPreferences数据
+                        }else {
+                            Toast.makeText(getActivity(), "获取数据失败，请先刷新界面或检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 },1000);
             }
@@ -408,9 +424,15 @@ public class SecondFragment extends Fragment {
                         //从SharedPreferences读取数据
                         prefs=getActivity().getSharedPreferences("datastore",0);
                         String dataString=prefs.getString("data","");
-                        Log.e("（手动）圈舍Spinner返回数据读取",dataString);
-                        newdata=Utility.handleDataResponse(dataString);
-                        showJsDataInfo(newdata);//刷新界面
+                        if (dataString!=""){
+                            Log.e("（手动）圈舍Spinner返回数据读取",dataString);
+                            newdata=Utility.handleDataResponse(dataString);
+                            showJsDataInfo(newdata);//刷新界面
+                            prefs.edit().clear().commit();//清除SharedPreferences数据
+                        }else {
+                            Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                        }
+
                     }
                 },1000);
             }
@@ -427,7 +449,7 @@ public class SecondFragment extends Fragment {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String inputz= spin_juanshe.getSelectedItem().toString();
+                final String inputz= spin_juanshe.getSelectedItem().toString();
                 Integer z=Integer.parseInt(inputz);
                 MyMqttClient.sharedCenter().setSendData(
                         //"/sys/a1S917F388O/wenxin/thing/event/property/post",
@@ -442,9 +464,14 @@ public class SecondFragment extends Fragment {
                         //从SharedPreferences读取数据
                         prefs=getActivity().getSharedPreferences("datastore",0);
                         String dataString=prefs.getString("data","");
-                        Log.e("圈舍按钮数据读取",dataString);
-                        newdata=Utility.handleDataResponse(dataString);
-                        showJsDataInfo(newdata);//刷新界面
+                        if (dataString!=""){
+                            Log.e("圈舍按钮数据读取",dataString);
+                            newdata=Utility.handleDataResponse(dataString);
+                            showJsDataInfo(newdata);//刷新界面
+                            prefs.edit().clear().commit();//清除SharedPreferences数据
+                        }else {
+                            Toast.makeText(getActivity(), "获取数据失败，请先刷新界面或检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 },1000);
             }
@@ -468,9 +495,15 @@ public class SecondFragment extends Fragment {
                         //从SharedPreferences读取数据
                         prefs=getActivity().getSharedPreferences("datastore",0);
                         String dataString=prefs.getString("data","");
-                        Log.e("圈舍按钮数据读取",dataString);
-                        newdata=Utility.handleDataResponse(dataString);
-                        showJsDataInfo(newdata);//刷新界面
+                        if (dataString!=""){
+                            Log.e("圈舍按钮数据读取",dataString);
+                            newdata=Utility.handleDataResponse(dataString);
+                            showJsDataInfo(newdata);//刷新界面
+                            prefs.edit().clear().commit();//清除SharedPreferences数据
+                        }else {
+                            Toast.makeText(getActivity(), "获取数据失败，请先刷新界面或检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                        }
+
                     }
                 },1000);
             }

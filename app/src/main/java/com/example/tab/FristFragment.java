@@ -19,7 +19,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import me.jessyan.autosize.internal.CustomAdapt;
 
 import static com.example.tab.Utility.BtnShow;
 
@@ -74,9 +73,14 @@ public class FristFragment extends Fragment {
                         //从SharedPreferences读取数据
                         prefs=getActivity().getSharedPreferences("datastore",0);
                         dataString=prefs.getString("data","");
-                        Log.e("自动数据读取",dataString);
-                        newdata=Utility.handleDataResponse(dataString);
-                        showDataInfo(newdata);
+                        if (dataString !=""){
+                            Log.e("自动数据读取",dataString);
+                            newdata=Utility.handleDataResponse(dataString);
+                            showDataInfo(newdata);
+                            prefs.edit().clear().commit();//清除SharedPreferences数据
+                        }else {
+                            Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                        }
                         swipeRefresh.setRefreshing(false);
                     }
                 },1000);
@@ -184,10 +188,15 @@ public class FristFragment extends Fragment {
                         public void run() {
                             //从SharedPreferences读取数据
                             prefs=getActivity().getSharedPreferences("datastore",0);
-                            String dataString=prefs.getString("data","");
-                            Log.e("自动（Spinner）返回数据读取",dataString);
-                            newdata=Utility.handleDataResponse(dataString);
-                            showDataInfo(newdata);//刷新界面
+                            dataString=prefs.getString("data","");
+                            if (dataString!=""){
+                                Log.e("自动（Spinner）返回数据读取",dataString);
+                                newdata=Utility.handleDataResponse(dataString);
+                                showDataInfo(newdata);//刷新界面
+                                prefs.edit().clear().commit();//清除SharedPreferences数据
+                            }else {
+                                Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     },1000);
 
@@ -225,10 +234,16 @@ public class FristFragment extends Fragment {
                     public void run() {
                         //从SharedPreferences读取数据
                         prefs=getActivity().getSharedPreferences("datastore",0);
-                        String dataString=prefs.getString("data","");
-                        Log.e("自动（按钮1）数据读取",dataString);
-                        newdata=Utility.handleDataResponse(dataString);
-                        showDataInfo(newdata);//刷新界面
+                        dataString=prefs.getString("data","");
+                        if (dataString!=""){
+                            Log.e("自动（按钮1）数据读取",dataString);
+                            newdata=Utility.handleDataResponse(dataString);
+                            showDataInfo(newdata);//刷新界面
+                            prefs.edit().clear().commit();//清除SharedPreferences数据
+                        }else {
+                            Toast.makeText(getActivity(), "获取数据失败，请先刷新界面或检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                        }
+
                     }
                 },1000);
             }
@@ -261,9 +276,15 @@ public class FristFragment extends Fragment {
                         //从SharedPreferences读取数据
                         prefs=getActivity().getSharedPreferences("datastore",0);
                         String dataString=prefs.getString("data","");
-                        Log.e("自动（按钮2）数据读取",dataString);
-                        newdata=Utility.handleDataResponse(dataString);
-                        showDataInfo(newdata);//刷新界面
+                        if (dataString!=""){
+                            Log.e("自动（按钮2）数据读取",dataString);
+                            newdata=Utility.handleDataResponse(dataString);
+                            showDataInfo(newdata);//刷新界面
+                            prefs.edit().clear().commit();//清除SharedPreferences数据
+                        }else {
+                            Toast.makeText(getActivity(), "获取数据失败，请先刷新界面或检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                        }
+
                     }
                 },1000);
             }
