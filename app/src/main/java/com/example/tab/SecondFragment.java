@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -19,10 +20,17 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.tab.Login.ScanMessage;
+
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONArray;
+import org.litepal.LitePal;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.example.tab.Utility.BtnShow;
+import static com.example.tab.Utility.fabutopic;
 
 public class SecondFragment extends Fragment {
     private SwipeRefreshLayout swipeRefresh;
@@ -56,6 +64,10 @@ public class SecondFragment extends Fragment {
     private Spinner spin_juanshe;
     private String dataString;
     private boolean isGetData = false;
+    private List<CharSequence> faeduList = null;
+    private ArrayAdapter<CharSequence> faeduAdapter = null;
+    private List<CharSequence> juaneduList = null;
+    private ArrayAdapter<CharSequence> juaneduAdapter = null;
     @SuppressLint("ResourceAsColor")
     @Nullable
     @Override
@@ -88,6 +100,28 @@ public class SecondFragment extends Fragment {
         jiebodai=view.findViewById(R.id.btn_9);
         spin_fajiao=view.findViewById(R.id.spin2);
         spin_juanshe=view.findViewById(R.id.spin3);
+        //Topic
+        ScanMessage lastmessage= LitePal.findLast(ScanMessage.class);
+        String fabutopic=lastmessage.getFabuTopic().trim();
+        //设置发酵罐spinner
+        faeduList = new ArrayList<CharSequence>();
+        int fanum=Integer.valueOf(lastmessage.getFanum().trim());
+        for (int i=0;i<=fanum;i++){
+            faeduList.add(String.valueOf(i));
+        }
+        faeduAdapter = new ArrayAdapter<CharSequence>(this.getActivity(),android.R.layout.simple_spinner_item,faeduList);
+        faeduAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spin_fajiao.setAdapter(faeduAdapter);
+        //设置圈舍spinner
+        juaneduList = new ArrayList<CharSequence>();
+        int juannum=Integer.valueOf(lastmessage.getJuannum().trim());
+        for (int i=0;i<=juannum;i++){
+            juaneduList.add(String.valueOf(i));
+        }
+        juaneduAdapter = new ArrayAdapter<CharSequence>(this.getActivity(),android.R.layout.simple_spinner_item,juaneduList);
+        juaneduAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spin_juanshe.setAdapter(juaneduAdapter);
+
         //下拉刷新
         swipeRefresh.setColorSchemeColors(R.color.colorPrimary);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -349,7 +383,8 @@ public class SecondFragment extends Fragment {
                 MyMqttClient.sharedCenter().setSendData(
                         //"/sys/a1S917F388O/wenxin/thing/event/property/post",
                         //"/a1yPGkxyv1q/SimuApp/user/update",
-                        "/a1S917F388O/P:0001:01/user/update",
+                        //"/a1S917F388O/P:0001:01/user/update",
+                        fabutopic,
                        // Utility.CommandJson(x,112,1),
                         Utility.SetCommandJson(Id,Cmd,jsonArray),
                         0,
@@ -400,7 +435,8 @@ public class SecondFragment extends Fragment {
                 MyMqttClient.sharedCenter().setSendData(
                         //"/sys/a1S917F388O/wenxin/thing/event/property/post",
                         //"/a1yPGkxyv1q/SimuApp/user/update",
-                        "/a1S917F388O/P:0001:01/user/update",
+                        //"/a1S917F388O/P:0001:01/user/update",
+                        fabutopic,
                        // Utility.CommandJson(x,67,para),
                         Utility.SetCommandJson(Id,Cmd,jsonArray),
                         0,
@@ -452,7 +488,8 @@ public class SecondFragment extends Fragment {
                 MyMqttClient.sharedCenter().setSendData(
                         //"/sys/a1S917F388O/wenxin/thing/event/property/post",
                        // "/a1yPGkxyv1q/SimuApp/user/update",
-                        "/a1S917F388O/P:0001:01/user/update",
+                        //"/a1S917F388O/P:0001:01/user/update",
+                        fabutopic,
                        // Utility.CommandJson(z+16,112,1),
                         Utility.SetCommandJson(Id,Cmd,jsonArray),
                         0,
@@ -504,7 +541,8 @@ public class SecondFragment extends Fragment {
                 MyMqttClient.sharedCenter().setSendData(
                         //"/sys/a1S917F388O/wenxin/thing/event/property/post",
                        // "/a1yPGkxyv1q/SimuApp/user/update",
-                        "/a1S917F388O/P:0001:01/user/update",
+                       // "/a1S917F388O/P:0001:01/user/update",
+                        fabutopic,
                        // Utility.CommandJson(z+16,67,para),
                         Utility.SetCommandJson(Id,Cmd,jsonArray),
                         0,
@@ -548,7 +586,8 @@ public class SecondFragment extends Fragment {
                 MyMqttClient.sharedCenter().setSendData(
                 //"/sys/a1S917F388O/wenxin/thing/event/property/post",
                 //"/a1yPGkxyv1q/SimuApp/user/update",
-                "/a1gZWTRWzGi/P:0001:01/user/update",
+                //"/a1gZWTRWzGi/P:0001:01/user/update",
+                fabutopic,
                 //"{\"method\":\"thing.event.property.post\",\"id\":\"1111\",\"params\":{\"Id\":1,\"Cmd\":67,\"Para\":[13]},\"version\":\"1.0.0\"}",
                 Utility.SetCommandJson(Id,Cmd,jsonArray),
                 0,

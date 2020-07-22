@@ -1,14 +1,17 @@
 package com.example.tab;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -20,7 +23,13 @@ import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 
+import com.example.tab.Login.ScanMessage;
+
 import org.json.JSONArray;
+import org.litepal.LitePal;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.example.tab.Utility.BtnShow;
 
@@ -42,12 +51,19 @@ public class FristFragment extends Fragment {
     private SharedPreferences prefs;
     private Data newdata;
     private String dataString;
+    private static final int UPDATE_TEXT=1;
+    private static Context mContext =null;
+
+    private List<CharSequence> eduList = null;
+    private ArrayAdapter<CharSequence> eduAdapter = null;
+    private int num;
+    private String fabutopic;
 
     @SuppressLint("ResourceAsColor")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
+        mContext=getActivity();
         View view=inflater.inflate(R.layout.fragment_frist, null);
         spinner=view.findViewById(R.id.Spi);
         dangqianwendu=view.findViewById(R.id.Tv_DangqiqnWendu);
@@ -63,6 +79,18 @@ public class FristFragment extends Fragment {
         zidong=view.findViewById(R.id.btn6);
         zanting=view.findViewById(R.id.btn7);
         swipeRefresh=view.findViewById(R.id.swipe_refresh);
+        //Topic
+        ScanMessage lastmessage= LitePal.findLast(ScanMessage.class);
+        fabutopic=lastmessage.getFabuTopic().trim();
+        //设置spinner
+        eduList = new ArrayList<CharSequence>();
+        num=Integer.valueOf(lastmessage.getFanum().trim());
+        for (int i=0;i<=num;i++){
+            eduList.add(String.valueOf(i));
+        }
+        eduAdapter = new ArrayAdapter<CharSequence>(this.getActivity(),android.R.layout.simple_spinner_item,eduList);
+        eduAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(eduAdapter);
         //下拉刷新
         swipeRefresh.setColorSchemeColors(R.color.colorPrimary);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -193,7 +221,8 @@ public class FristFragment extends Fragment {
                     MyMqttClient.sharedCenter().setSendData(
                            //"/sys/a1S917F388O/wenxin/thing/event/property/post",
                             //"/a1yPGkxyv1q/SimuApp/user/update",
-                            "/a1gZWTRWzGi/P:0001:01/user/update",
+                            //"/a1gZWTRWzGi/P:0001:01/user/update",
+                            fabutopic,
                             Utility.SetCommandJson(Id,Cmd,jsonArray),
                             0,
                             false);
@@ -250,7 +279,8 @@ public class FristFragment extends Fragment {
                 MyMqttClient.sharedCenter().setSendData(
                         //"/sys/a1S917F388O/wenxin/thing/event/property/post",
                         //"/a1yPGkxyv1q/SimuApp/user/update",
-                        "/a1S917F388O/P:0001:01/user/update",
+                        //"/a1S917F388O/P:0001:01/user/update",
+                        fabutopic,
                         //Utility.CommandJson(x,97,para),
                         Utility.SetCommandJson(Id,Cmd,jsonArray),
                         0,
@@ -296,7 +326,8 @@ public class FristFragment extends Fragment {
                     jsonArray.put(para1);
                     MyMqttClient.sharedCenter().setSendData(
                             //"/sys/a1S917F388O/wenxin/thing/event/property/post",
-                            "/a1S917F388O/P:0001:01/user/update",
+                            //"/a1S917F388O/P:0001:01/user/update",
+                            fabutopic,
                             //Utility.CommandJson(1, 97,para1),
                             Utility.SetCommandJson(Id,Cmd,jsonArray),
                             0,
@@ -310,7 +341,8 @@ public class FristFragment extends Fragment {
                     jsonArray.put(para2);
                     MyMqttClient.sharedCenter().setSendData(
                             //"/sys/a1S917F388O/wenxin/thing/event/property/post",
-                            "/a1yPGkxyv1q/SimuApp/user/update",
+                            //"/a1yPGkxyv1q/SimuApp/user/update",
+                            fabutopic,
                             //Utility.CommandJson(1, 97,para2),
                             Utility.SetCommandJson(Id,Cmd,jsonArray),
                             0,
@@ -336,4 +368,15 @@ public class FristFragment extends Fragment {
             }
         });
     }
+    public static Handler handler0=new Handler(){
+        public  void handleMessage(Message msg){
+            switch(msg.what){
+                case UPDATE_TEXT:
+                    Toast.makeText(mContext,"已连接到服务器！",Toast.LENGTH_SHORT).show();
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 }

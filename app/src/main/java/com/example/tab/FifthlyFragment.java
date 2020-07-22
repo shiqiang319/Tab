@@ -9,12 +9,10 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.Toast;
 
@@ -23,9 +21,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.tab.Login.ScanMessage;
+
 import org.json.JSONArray;
+import org.litepal.LitePal;
 
 import static com.example.tab.Utility.SetCommandJson;
+import static com.example.tab.Utility.fabutopic;
 
 public class FifthlyFragment extends Fragment {
     private SwipeRefreshLayout swipeRefresh;
@@ -64,6 +66,9 @@ public class FifthlyFragment extends Fragment {
         sysq=view.findViewById(R.id.xt_sysq);
         canshu=view.findViewById(R.id.btn_cspz2);
         btnsq=view.findViewById(R.id.btn_sysq);
+
+        ScanMessage lastmessage= LitePal.findLast(ScanMessage.class);
+        String fabutopic=lastmessage.getFabuTopic().trim();
         //下拉刷新
         swipeRefresh.setColorSchemeColors(R.color.colorPrimary);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -176,7 +181,8 @@ public class FifthlyFragment extends Fragment {
                 MyMqttClient.sharedCenter().setSendData(
                         //"/sys/a1S917F388O/wenxin/thing/event/property/post",
                         //"/a1yPGkxyv1q/SimuApp/user/update",
-                        "/a1gZWTRWzGi/P:0001:01/user/update",
+                        //"/a1gZWTRWzGi/P:0001:01/user/update",
+                        fabutopic,
                        // SetCommandJson(1,26,jsonArray),
                         Utility.SetCommandJson(Id,Cmd,jsonArray),
                         0,
@@ -207,8 +213,8 @@ public class FifthlyFragment extends Fragment {
      */
     public void customView( )
     {
-        // 加载\res\layout\login.xml界面布局文件
-        final TableLayout loginForm = (TableLayout) getLayoutInflater().inflate(R.layout.login, null);
+        // 加载\res\layout\shouquanlogin.xml界面布局文件
+        final TableLayout loginForm = (TableLayout) getLayoutInflater().inflate(R.layout.shouquanlogin, null);
         new AlertDialog.Builder(getActivity())
                 // 设置对话框的图标
                 // .setIcon(R.drawable.tools)

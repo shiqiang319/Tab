@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -24,8 +25,16 @@ import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
+import com.example.tab.Login.ScanMessage;
+
 import org.json.JSONArray;
+import org.litepal.LitePal;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.example.tab.Utility.SetCommandJson;
+import static com.example.tab.Utility.fabutopic;
 
 public class FourthlyFragment extends Fragment {
     private int P1=0;
@@ -56,6 +65,9 @@ public class FourthlyFragment extends Fragment {
     private CheckBox junzhong;
     private Button canshu;
     private String dataString;
+    private List<CharSequence> eduList = null;
+    private ArrayAdapter<CharSequence> eduAdapter = null;
+    private int num;
     @SuppressLint("ResourceAsColor")
     @Nullable
     @Override
@@ -85,6 +97,19 @@ public class FourthlyFragment extends Fragment {
         fuliao=view.findViewById(R.id.cb_3);
         junzhong=view.findViewById(R.id.cb_4);
         canshu=view.findViewById(R.id.btn_cspz);
+        //Topic
+        ScanMessage lastmessage= LitePal.findLast(ScanMessage.class);
+        String fabutopic=lastmessage.getFabuTopic().trim();
+        //设置spinner
+        eduList = new ArrayList<CharSequence>();
+        num=Integer.valueOf(lastmessage.getFanum().trim());
+        for (int i=0;i<=num;i++){
+            eduList.add(String.valueOf(i));
+        }
+        eduAdapter = new ArrayAdapter<CharSequence>(this.getActivity(),android.R.layout.simple_spinner_item,eduList);
+        eduAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(eduAdapter);
+
         //下拉刷新
         swipeRefresh.setColorSchemeColors(R.color.colorPrimary);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -188,7 +213,8 @@ public class FourthlyFragment extends Fragment {
                 MyMqttClient.sharedCenter().setSendData(
                         //"/sys/a1S917F388O/wenxin/thing/event/property/post",
                         //"/a1yPGkxyv1q/SimuApp/user/update",
-                        "/a1gZWTRWzGi/P:0001:01/user/update",
+                        //"/a1gZWTRWzGi/P:0001:01/user/update",
+                        fabutopic,
                        // Utility.CommandJson(x,43,1),
                         Utility.SetCommandJson(Id,Cmd,jsonArray),
                         0,
@@ -345,7 +371,8 @@ public class FourthlyFragment extends Fragment {
                 MyMqttClient.sharedCenter().setSendData(
                         //"/sys/a1S917F388O/wenxin/thing/event/property/post",
                         //"/a1yPGkxyv1q/SimuApp/user/update",
-                        "/a1S917F388O/P:0001:01/user/update",
+                        //"/a1S917F388O/P:0001:01/user/update",
+                        fabutopic,
                         //SetCommandJson(x,27,jsonArray),
                         Utility.SetCommandJson(Id,Cmd,jsonArray),
                         0,

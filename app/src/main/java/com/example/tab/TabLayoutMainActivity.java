@@ -9,9 +9,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+
+import com.example.tab.Login.ScanMessage;
 import com.google.android.material.tabs.TabLayout;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.litepal.LitePal;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -31,6 +34,7 @@ public class TabLayoutMainActivity extends AppCompatActivity implements CustomAd
         return 667;
     }
     private SharedPreferences prefs;
+    private String dingyuetopic;
     //未选中的Tab图片
     private int[] unSelectTabRes = new int[]{R.drawable.zidong
             , R.drawable.shoudong,R.drawable.zhuangtai, R.drawable.shezhi,R.drawable.xitong};
@@ -52,12 +56,15 @@ public class TabLayoutMainActivity extends AppCompatActivity implements CustomAd
 
        // Toolbar toolbar=findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
+        ScanMessage lastmessage= LitePal.findLast(ScanMessage.class);
+         dingyuetopic=lastmessage.getDingyueTopic().trim();
+
 
         initView();
         initData();
         initListener();
 
-        MyMqttClient.sharedCenter().setConnect();
+       // MyMqttClient.sharedCenter().setConnect();
         MyMqttClient.sharedCenter().setOnServerReadStringCallback(new MyMqttClient.OnServerReadStringCallback() {
             @Override//Topic:主题  Msg.toString():接收的消息  MsgByte:16进制消息
             public void callback(String Topic, final MqttMessage Msg, byte[] MsgByte) {
@@ -77,14 +84,14 @@ public class TabLayoutMainActivity extends AppCompatActivity implements CustomAd
             @Override
             public void callback(String Topic, int qos) {
                 //if (Topic.equals("/sys/a1S917F388O/shebei/thing/service/property/set")){//订阅1111成功
-                 if (Topic.equals("/a1S917F388O/P:0001:01/user/get")){//订阅1111成功
+                 if (Topic.equals(dingyuetopic)){//订阅1111成功
                     stopTimerSubscribeTopic();//订阅到主题,停止订阅
                 }
             }
         });
         startTimerSubscribeTopic();//定时订阅主题
         //MyMqttClient.sharedCenter().setUnSubscribe("/sys/a1S917F388O/shebei/thing/service/property/set");//取消订阅消息
-        MyMqttClient.sharedCenter().setUnSubscribe("/a1S917F388O/P:0001:01/user/get");//取消订阅消息
+        MyMqttClient.sharedCenter().setUnSubscribe(dingyuetopic);//取消订阅消息
     }
 
     private void initView() {
@@ -186,7 +193,7 @@ public class TabLayoutMainActivity extends AppCompatActivity implements CustomAd
             TimerTaskSubscribeTopic = new TimerTask() {
                 @Override
                 public void run() {
-                    MyMqttClient.sharedCenter().setSubscribe("/a1S917F388O/P:0001:01/user/get",0);//订阅主题1111,消息等级0
+                    MyMqttClient.sharedCenter().setSubscribe(dingyuetopic,0);//订阅主题1111,消息等级0
                     //MyMqttClient.sharedCenter().setSubscribe("/sys/a1S917F388O/shebei/thing/service/property/set",0);//订阅主题1111,消息等级0
                 }
             };

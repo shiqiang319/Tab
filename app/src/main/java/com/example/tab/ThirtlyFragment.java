@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -19,9 +20,16 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.tab.Login.ScanMessage;
+
 import org.json.JSONArray;
+import org.litepal.LitePal;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.example.tab.Utility.BtnBgShowColor;
+import static com.example.tab.Utility.fabutopic;
 
 public class ThirtlyFragment extends Fragment {
     private SwipeRefreshLayout swipeRefresh;
@@ -60,6 +68,10 @@ public class ThirtlyFragment extends Fragment {
     private Spinner spin_fjg;
     private Spinner spin_js;
     private  String dataString;
+    private List<CharSequence> faeduList = null;
+    private ArrayAdapter<CharSequence> faeduAdapter = null;
+    private List<CharSequence> juaneduList = null;
+    private ArrayAdapter<CharSequence> juaneduAdapter = null;
 
     @SuppressLint("ResourceAsColor")
     @Nullable
@@ -97,6 +109,27 @@ public class ThirtlyFragment extends Fragment {
         chanliang=view.findViewById(R.id.tv_chanliang);
         zhuangtai=view.findViewById(R.id.tv_zhuangtai);
         cuowu=view.findViewById(R.id.tv_cuowu);
+        //Topic
+        ScanMessage lastmessage= LitePal.findLast(ScanMessage.class);
+        String fabutopic=lastmessage.getFabuTopic().trim();
+        //设置发酵罐spinner
+        faeduList = new ArrayList<CharSequence>();
+        int fanum=Integer.valueOf(lastmessage.getFanum().trim());
+        for (int i=0;i<=fanum;i++){
+            faeduList.add(String.valueOf(i));
+        }
+        faeduAdapter = new ArrayAdapter<CharSequence>(this.getActivity(),android.R.layout.simple_spinner_item,faeduList);
+        faeduAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spin_fjg.setAdapter(faeduAdapter);
+        //设置圈舍spinner
+        juaneduList = new ArrayList<CharSequence>();
+        int juannum=Integer.valueOf(lastmessage.getJuannum().trim());
+        for (int i=0;i<=juannum;i++){
+            juaneduList.add(String.valueOf(i));
+        }
+        juaneduAdapter = new ArrayAdapter<CharSequence>(this.getActivity(),android.R.layout.simple_spinner_item,juaneduList);
+        juaneduAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spin_js.setAdapter(juaneduAdapter);
         //下拉刷新
         swipeRefresh.setColorSchemeColors(R.color.colorPrimary);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -295,7 +328,8 @@ public class ThirtlyFragment extends Fragment {
                 MyMqttClient.sharedCenter().setSendData(
                         //"/sys/a1S917F388O/wenxin/thing/event/property/post",
                         //"/a1yPGkxyv1q/SimuApp/user/update",
-                        "/a1S917F388O/P:0001:01/user/update",
+                        //"/a1S917F388O/P:0001:01/user/update",
+                        fabutopic,
                        // Utility.CommandJson(x,112,1),
                         Utility.SetCommandJson(Id,Cmd,jsonArray),
                         0,
@@ -353,7 +387,8 @@ public class ThirtlyFragment extends Fragment {
                 MyMqttClient.sharedCenter().setSendData(
                         //"/sys/a1S917F388O/wenxin/thing/event/property/post",
                        //"/a1yPGkxyv1q/SimuApp/user/update",
-                        "/a1S917F388O/P:0001:01/user/update",
+                       // "/a1S917F388O/P:0001:01/user/update",
+                        fabutopic,
                        // Utility.CommandJson(z+16,112,1),
                         Utility.SetCommandJson(Id,Cmd,jsonArray),
                         0,

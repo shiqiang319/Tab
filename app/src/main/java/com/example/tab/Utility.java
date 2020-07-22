@@ -5,14 +5,23 @@ import android.graphics.drawable.GradientDrawable;
 import android.util.Log;
 import android.widget.Button;
 
+import com.example.tab.Login.ScanMessage;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.litepal.LitePal;
+
+import javax.crypto.Mac;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 
 public class Utility {
+     static ScanMessage lastmessage= LitePal.findLast(ScanMessage.class);
+     static String fabutopic=lastmessage.getFabuTopic().trim();
+
     public static Data handleDataResponse(String response){
         try{
             JSONObject jsonObject=new JSONObject(response);
@@ -44,8 +53,8 @@ public class Utility {
         MyMqttClient.sharedCenter().setSendData(
                 //"/sys/a1S917F388O/wenxin/thing/event/property/post",
                 //"/a1yPGkxyv1q/SimuApp/user/update",
-                //fabutopic,
-                "/a1S917F388O/P:0001:01/user/update",
+                fabutopic,
+               // "/a1S917F388O/P:0001:01/user/update",
                 //"{\"method\":\"thing.event.property.post\",\"id\":\"1111\",\"params\":{\"Id\":1,\"Cmd\":112,\"Para\":[1]},\"version\":\"1.0.0\"}",
                 Utility.SetCommandJson(Id,Cmd,jsonArray),
                 0,
@@ -71,8 +80,8 @@ public class Utility {
         MyMqttClient.sharedCenter().setSendData(
                 //"/sys/a1S917F388O/wenxin/thing/event/property/post",
                 //"/a1yPGkxyv1q/SimuApp/user/update",
-                //fabutopic,
-                "/a1S917F388O/P:0001:01/user/update",
+                fabutopic,
+                //"/a1S917F388O/P:0001:01/user/update",
                 //"{\"method\":\"thing.event.property.post\",\"id\":\"1111\",\"params\":{\"Id\":1,\"Cmd\":112,\"Para\":[1]},\"version\":\"1.0.0\"}",
                 Utility.SetCommandJson(Id,Cmd,jsonArray),
                 0,
@@ -99,8 +108,8 @@ public class Utility {
         MyMqttClient.sharedCenter().setSendData(
                 //"/sys/a1S917F388O/wenxin/thing/event/property/post",
                 //"/a1yPGkxyv1q/SimuApp/user/update",
-                //fabutopic,
-                "/a1gZWTRWzGi/P:0001:01/user/update",
+                fabutopic,
+                //"/a1gZWTRWzGi/P:0001:01/user/update",
                 //"{\"method\":\"thing.event.property.post\",\"id\":\"1111\",\"params\":{\"Id\":1,\"Cmd\":112,\"Para\":[1]},\"version\":\"1.0.0\"}",
                 Utility.SetCommandJson(Id,Cmd,jsonArray),
                 0,
@@ -153,6 +162,31 @@ public class Utility {
         }
 
         return jsonObject.toString();
+    }
+    /**
+     * HMACSHA1加密
+     *
+     */
+    public static String encryptHMAC(String signMethod,String content, String key) throws Exception {
+        SecretKey secretKey = new SecretKeySpec(key.getBytes("utf-8"), signMethod);
+        Mac mac = Mac.getInstance(secretKey.getAlgorithm());
+        mac.init(secretKey);
+        byte[] data = mac.doFinal(content.getBytes("utf-8"));
+        return bytesToHexString(data);
+    }
+
+    public static final String bytesToHexString(byte[] bArray) {
+
+        StringBuffer sb = new StringBuffer(bArray.length);
+        String sTemp;
+        for (int i = 0; i < bArray.length; i++) {
+            sTemp = Integer.toHexString(0xFF & bArray[i]);
+            if (sTemp.length() < 2) {
+                sb.append(0);
+            }
+            sb.append(sTemp.toUpperCase());
+        }
+        return sb.toString();
     }
     //构造校验字ChkWord
     public static int  MySecret(int Start, int Append) {

@@ -1,8 +1,7 @@
 package com.example.tab;
 
+import android.os.Message;
 import android.util.Log;
-import android.widget.Toast;
-
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
@@ -19,12 +18,48 @@ import java.util.concurrent.Executors;
 public class MyMqttClient {
     private static final String TAG  = MyMqttClient.class.getSimpleName();
     private static MyMqttClient myMqttClient;
+    private static final int UPDATE_TEXT=1;
 
-    private static String ClientId = "P:0001:01|securemode=3,signmethod=hmacsha1|";
-    private static String MqttUserString = "P:0001:01&a1S917F388O";
-    private static String MqttPwdString = "40cc74cee4f24fe6ccfd2c1458c57410716c66e6";
-    private static String MqttIPString = "a1S917F388O.iot-as-mqtt.cn-shanghai.aliyuncs.com:1883";
-    private static int MqttPort = 1883;
+    private  String ClientId ;
+    private  String MqttUserString ;
+    private  String MqttPwdString ;
+    private  String MqttIPString ;
+    private  int MqttPort = 1883;
+
+
+
+    public String getClientId() {
+        return ClientId;
+    }
+
+    public void setClientId(String clientId) {
+        ClientId = clientId;
+    }
+
+    public String getMqttUserString() {
+        return MqttUserString;
+    }
+
+    public void setMqttUserString(String mqttUserString) {
+        MqttUserString = mqttUserString;
+    }
+
+    public String getMqttPwdString() {
+        return MqttPwdString;
+    }
+
+    public void setMqttPwdString(String mqttPwdString) {
+        MqttPwdString = mqttPwdString;
+    }
+
+    public String getMqttIPString() {
+        return MqttIPString;
+    }
+
+    public void setMqttIPString(String mqttIPString) {
+        MqttIPString = mqttIPString;
+    }
+
 //    private static String ClientId = "SimuApp|securemode=3,signmethod=hmacsha1|";
 //    private static String MqttUserString = "SimuApp&a1yPGkxyv1q";
 //    private static String MqttPwdString = "5b25347c95b117f99d735816be534683baea20de";
@@ -89,7 +124,7 @@ public class MyMqttClient {
             if (ClientId.length()>0){
                 Str = ClientId;
             }else {
-      //          Str = MainActivity.TelephonyIMEI+Str;
+                //          Str = MainActivity.TelephonyIMEI+Str;
             }
             Log.e(TAG, Str);
 
@@ -139,7 +174,15 @@ public class MyMqttClient {
                                     ConnectedCallback.callback();
                                 ConnectFlage = false;
                                 Log.e(TAG, "run: Connect Success");
-                                //Toast.makeText(,"服务器连接成功！",Toast.LENGTH_SHORT).show();
+                                //Toast
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Message message=new Message();
+                                        message.what=1;
+                                        FristFragment.handler0.sendMessage(message);
+                                    }
+                                }).start();
                             }
                         }
                     } catch (Exception e) {
@@ -163,20 +206,20 @@ public class MyMqttClient {
      */
     public void setSubscribe(final String Topic,final int qos) {
         SingleThreadExecutor.execute(
-            new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try{
-                    if (mqttClient!=null) {
-                        mqttClient.subscribe(Topic,qos);
-                        if (SubscribeSuccessCallback !=null){
-                            SubscribeSuccessCallback.callback(Topic,qos);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try{
+                            if (mqttClient!=null) {
+                                mqttClient.subscribe(Topic,qos);
+                                if (SubscribeSuccessCallback !=null){
+                                    SubscribeSuccessCallback.callback(Topic,qos);
+                                }
+                            }
                         }
+                        catch (MqttException e){}
                     }
-                }
-                catch (MqttException e){}
-            }
-        }));
+                }));
 
     }
 
