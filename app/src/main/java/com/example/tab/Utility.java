@@ -2,6 +2,7 @@ package com.example.tab;
 
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.util.Log;
 import android.widget.Button;
 
 import com.google.gson.Gson;
@@ -22,28 +23,89 @@ public class Utility {
         return null;
     }
     public static  void requestData(){
+//        MyMqttClient.sharedCenter().setSendData(
+//                //"/sys/a1S917F388O/wenxin/thing/event/property/post",
+//                //"/a1yPGkxyv1q/SimuApp/user/update",
+//                "/a1gZWTRWzGi/P:0001:01/user/update",
+//                "{\"method\":\"thing.event.property.post\",\"id\":\"1111\",\"params\":{\"Id\":1,\"Cmd\":112,\"Para\":[1]},\"version\":\"1.0.0\"}",
+//                0,
+//                false);
+//                ScanMessage lastmessage= LitePal.findLast(ScanMessage.class);
+//                Integer username=lastmessage.getUserNum();
+//                Integer mynum=lastmessage.getMyNum();
+        Integer Id=1*256+1;
+        Integer Cmd=1*256+112;
+        JSONArray jsonArray=new JSONArray();
+        int P10=Utility.MySecret(65535,Id);
+        int P11=Utility.MySecret(P10,Cmd);
+        int P1=Utility.MySecret(P11,1);
+        jsonArray.put(P1);
+        jsonArray.put(1);
         MyMqttClient.sharedCenter().setSendData(
                 //"/sys/a1S917F388O/wenxin/thing/event/property/post",
-                "/a1yPGkxyv1q/SimuApp/user/update",
-                "{\"method\":\"thing.event.property.post\",\"id\":\"1111\",\"params\":{\"Id\":1,\"Cmd\":112,\"Para\":[1]},\"version\":\"1.0.0\"}",
+                //"/a1yPGkxyv1q/SimuApp/user/update",
+                //fabutopic,
+                "/a1S917F388O/P:0001:01/user/update",
+                //"{\"method\":\"thing.event.property.post\",\"id\":\"1111\",\"params\":{\"Id\":1,\"Cmd\":112,\"Para\":[1]},\"version\":\"1.0.0\"}",
+                Utility.SetCommandJson(Id,Cmd,jsonArray),
                 0,
                 false);
+        Log.e("下拉刷新","已发送查询指令:"+ Utility.SetCommandJson(Id,Cmd,jsonArray));
     }
     public static  void szrequestData(){
+//        MyMqttClient.sharedCenter().setSendData(
+//                //"/sys/a1S917F388O/wenxin/thing/event/property/post",
+//                //"/a1yPGkxyv1q/SimuApp/user/update",
+//                "/a1gZWTRWzGi/P:0001:01/user/update",
+//                "{\"method\":\"thing.event.property.post\",\"id\":\"1111\",\"params\":{\"Id\":1,\"Cmd\":43,\"Para\":[1]},\"version\":\"1.0.0\"}",
+//                0,
+//                false);
+        Integer Id=1*256+1;
+        Integer Cmd=1*256+43;
+        JSONArray jsonArray=new JSONArray();
+        int P10=Utility.MySecret(65535,Id);
+        int P11=Utility.MySecret(P10,Cmd);
+        int P1=Utility.MySecret(P11,1);
+        jsonArray.put(P1);
+        jsonArray.put(1);
         MyMqttClient.sharedCenter().setSendData(
                 //"/sys/a1S917F388O/wenxin/thing/event/property/post",
-                "/a1yPGkxyv1q/SimuApp/user/update",
-                "{\"method\":\"thing.event.property.post\",\"id\":\"1111\",\"params\":{\"Id\":1,\"Cmd\":43,\"Para\":[1]},\"version\":\"1.0.0\"}",
+                //"/a1yPGkxyv1q/SimuApp/user/update",
+                //fabutopic,
+                "/a1S917F388O/P:0001:01/user/update",
+                //"{\"method\":\"thing.event.property.post\",\"id\":\"1111\",\"params\":{\"Id\":1,\"Cmd\":112,\"Para\":[1]},\"version\":\"1.0.0\"}",
+                Utility.SetCommandJson(Id,Cmd,jsonArray),
                 0,
                 false);
+        Log.e("下拉刷新","已发送查询指令:"+ Utility.SetCommandJson(Id,Cmd,jsonArray));
+
     }
     public static  void xtrequestData(){
+//        MyMqttClient.sharedCenter().setSendData(
+//                //"/sys/a1S917F388O/wenxin/thing/event/property/post",
+//                //"/a1yPGkxyv1q/SimuApp/user/update",
+//                "/a1gZWTRWzGi/P:0001:01/user/update",
+//                "{\"method\":\"thing.event.property.post\",\"id\":\"1111\",\"params\":{\"Id\":1,\"Cmd\":42,\"Para\":[1]},\"version\":\"1.0.0\"}",
+//                0,
+//                false);
+        Integer Id=1*256+1;
+        Integer Cmd=1*256+42;
+        JSONArray jsonArray=new JSONArray();
+        int P10=Utility.MySecret(65535,Id);
+        int P11=Utility.MySecret(P10,Cmd);
+        int P1=Utility.MySecret(P11,1);
+        jsonArray.put(P1);
+        jsonArray.put(1);
         MyMqttClient.sharedCenter().setSendData(
                 //"/sys/a1S917F388O/wenxin/thing/event/property/post",
-                "/a1yPGkxyv1q/SimuApp/user/update",
-                "{\"method\":\"thing.event.property.post\",\"id\":\"1111\",\"params\":{\"Id\":1,\"Cmd\":42,\"Para\":[1]},\"version\":\"1.0.0\"}",
+                //"/a1yPGkxyv1q/SimuApp/user/update",
+                //fabutopic,
+                "/a1gZWTRWzGi/P:0001:01/user/update",
+                //"{\"method\":\"thing.event.property.post\",\"id\":\"1111\",\"params\":{\"Id\":1,\"Cmd\":112,\"Para\":[1]},\"version\":\"1.0.0\"}",
+                Utility.SetCommandJson(Id,Cmd,jsonArray),
                 0,
                 false);
+        Log.e("下拉刷新","已发送查询指令:"+ Utility.SetCommandJson(Id,Cmd,jsonArray));
     }
     public static void BtnShow(final Button btn, final String BtnMsg, final String color){
         btn.setText(BtnMsg);
@@ -91,5 +153,23 @@ public class Utility {
         }
 
         return jsonObject.toString();
+    }
+    //构造校验字ChkWord
+    public static int  MySecret(int Start, int Append) {
+        int i,j;
+        int ApdByt;
+
+        Append <<= 4;
+        for(i=0;i<3;i++){
+            ApdByt = Append % 256;
+            Append /= 256;
+            Start = Start ^ ApdByt;
+            for(j=0;j<8;j++){
+                if((Start & 0x01)==1)
+                    Start = (Start >> 1)^0xA001;
+                else Start = Start >> 1;
+            }
+        }
+        return(Start);
     }
 }

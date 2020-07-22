@@ -20,11 +20,16 @@ public class MyMqttClient {
     private static final String TAG  = MyMqttClient.class.getSimpleName();
     private static MyMqttClient myMqttClient;
 
-    private static String ClientId = "SimuApp|securemode=3,signmethod=hmacsha1|";
-    private static String MqttUserString = "SimuApp&a1yPGkxyv1q";
-    private static String MqttPwdString = "5b25347c95b117f99d735816be534683baea20de";
-    private static String MqttIPString = "a1yPGkxyv1q.iot-as-mqtt.cn-shanghai.aliyuncs.com";
+    private static String ClientId = "P:0001:01|securemode=3,signmethod=hmacsha1|";
+    private static String MqttUserString = "P:0001:01&a1S917F388O";
+    private static String MqttPwdString = "40cc74cee4f24fe6ccfd2c1458c57410716c66e6";
+    private static String MqttIPString = "a1S917F388O.iot-as-mqtt.cn-shanghai.aliyuncs.com:1883";
     private static int MqttPort = 1883;
+//    private static String ClientId = "SimuApp|securemode=3,signmethod=hmacsha1|";
+//    private static String MqttUserString = "SimuApp&a1yPGkxyv1q";
+//    private static String MqttPwdString = "5b25347c95b117f99d735816be534683baea20de";
+//    private static String MqttIPString = "a1yPGkxyv1q.iot-as-mqtt.cn-shanghai.aliyuncs.com";
+//    private static int MqttPort = 1883;
 
 //    private static String ClientId = "wenxin|securemode=3,signmethod=hmacsha1|";
 //    private static String MqttUserString = "wenxin&a1S917F388O";

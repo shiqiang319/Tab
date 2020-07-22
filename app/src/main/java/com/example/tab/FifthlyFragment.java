@@ -70,7 +70,6 @@ public class FifthlyFragment extends Fragment {
             @Override
             public void onRefresh() {
                 Utility.xtrequestData();//发送请求
-                Log.e("下拉刷新","系统—已发送查询指令!");
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -87,7 +86,7 @@ public class FifthlyFragment extends Fragment {
                         }
                         swipeRefresh.setRefreshing(false);
                     }
-                },1000);
+                },500);
             }
         });
         //使用授权为不可编辑
@@ -105,16 +104,16 @@ public class FifthlyFragment extends Fragment {
     }
     //展示Data实体类中的数据
     private void showDataInfo(Data newdata) {
-        fjgsl.setText(newdata.Para.get(0).toString());
-        qssl.setText(newdata.Para.get(1).toString());
-        qwfc.setText(newdata.Para.get(2).toString());
-        qwzq.setText(newdata.Para.get(3).toString());
-        qwsj.setText(newdata.Para.get(4).toString());
-        cwys.setText(newdata.Para.get(5).toString());
-        zdys.setText(newdata.Para.get(6).toString());
-        sbbm.setText(newdata.Para.get(8).toString());
-        yhdm.setText(newdata.Para.get(9).toString());
-        if (newdata.Para.get(7) == 1) {
+        fjgsl.setText(newdata.Para.get(1).toString());
+        qssl.setText(newdata.Para.get(2).toString());
+        qwfc.setText(newdata.Para.get(3).toString());
+        qwzq.setText(newdata.Para.get(4).toString());
+        qwsj.setText(newdata.Para.get(5).toString());
+        cwys.setText(newdata.Para.get(6).toString());
+        zdys.setText(newdata.Para.get(7).toString());
+        sbbm.setText(newdata.Para.get(9).toString());
+        yhdm.setText(newdata.Para.get(10).toString());
+        if (newdata.Para.get(8) == 1) {
             sysq.setText("正常");
         } else sysq.setText("停机");
     }
@@ -124,7 +123,7 @@ public class FifthlyFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 int P8;
-                JSONArray jsonArray=new JSONArray();
+                //JSONArray jsonArray=new JSONArray();
                 if (TextUtils.isEmpty(fjgsl.getText())||TextUtils.isEmpty(qssl.getText())||TextUtils.isEmpty(qwfc.getText())
                         ||TextUtils.isEmpty(qwzq.getText())||TextUtils.isEmpty(qwsj.getText())||TextUtils.isEmpty(cwys.getText())
                         ||TextUtils.isEmpty(zdys.getText())||TextUtils.isEmpty(sbbm.getText())||TextUtils.isEmpty(yhdm.getText())
@@ -144,6 +143,26 @@ public class FifthlyFragment extends Fragment {
                 if (sysq.getText().toString().trim().equals("正常")){
                      P8=1;
                 }else P8=0;
+//                ScanMessage lastmessage= LitePal.findLast(ScanMessage.class);
+//                Integer username=lastmessage.getUserNum();
+//                Integer mynum=lastmessage.getMyNum();
+                Integer Id=1*256+1;
+                Integer Cmd=1*256+26;
+                JSONArray jsonArray=new JSONArray();
+                int C0=Utility.MySecret(65535,Id);
+                int C1=Utility.MySecret(C0,Cmd);
+                int C2=Utility.MySecret(C1,P1);
+                int C3=Utility.MySecret(C2,P2);
+                int C4=Utility.MySecret(C3,P3);
+                int C5=Utility.MySecret(C4,P4);
+                int C6=Utility.MySecret(C5,P5);
+                int C7=Utility.MySecret(C6,P6);
+                int C8=Utility.MySecret(C7,P7);
+                int C9=Utility.MySecret(C8,P8);
+                int C10=Utility.MySecret(C9,P9);
+                int P0=Utility.MySecret(C10,P10);
+                jsonArray.put(P0);
+                jsonArray.put(P1);
                 jsonArray.put(P1);
                 jsonArray.put(P2);
                 jsonArray.put(P3);
@@ -156,8 +175,10 @@ public class FifthlyFragment extends Fragment {
                 jsonArray.put(P10);
                 MyMqttClient.sharedCenter().setSendData(
                         //"/sys/a1S917F388O/wenxin/thing/event/property/post",
-                        "/a1yPGkxyv1q/SimuApp/user/update",
-                        SetCommandJson(1,26,jsonArray),
+                        //"/a1yPGkxyv1q/SimuApp/user/update",
+                        "/a1gZWTRWzGi/P:0001:01/user/update",
+                       // SetCommandJson(1,26,jsonArray),
+                        Utility.SetCommandJson(Id,Cmd,jsonArray),
                         0,
                         false);
                 Log.e("EditText","发送数据："+SetCommandJson(1,26,jsonArray));
@@ -177,7 +198,7 @@ public class FifthlyFragment extends Fragment {
                         }
 
                     }
-                },1000);
+                },500);
             }
         });
     }

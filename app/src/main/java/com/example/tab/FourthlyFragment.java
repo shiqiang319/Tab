@@ -91,7 +91,6 @@ public class FourthlyFragment extends Fragment {
             @Override
             public void onRefresh() {
                 Utility.szrequestData();//发送请求
-                Log.e("下拉刷新","设置—已发送查询指令!");
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -108,7 +107,7 @@ public class FourthlyFragment extends Fragment {
                         }
                         swipeRefresh.setRefreshing(false);
                     }
-                },1000);
+                },500);
 
             }
         });
@@ -122,41 +121,41 @@ public class FourthlyFragment extends Fragment {
     }
     //展示Data实体类中的数据
     private void showDataInfo(Data newdata){
-        spinner.setSelection(newdata.Id);
-        wdsx.setText(newdata.Para.get(2).toString());
-        wdxx.setText(newdata.Para.get(3).toString());
-        fwsx.setText(newdata.Para.get(4).toString());
-        fwxx.setText(newdata.Para.get(5).toString());
-        flxz.setText(newdata.Para.get(6).toString());
-        jzxz.setText(newdata.Para.get(7).toString());
-        flxs.setText(newdata.Para.get(11).toString());
-        jzxs.setText(newdata.Para.get(12).toString());
-        slxs.setText(newdata.Para.get(9).toString());
-        xlxs.setText(newdata.Para.get(10).toString());
-        kjxs.setText(newdata.Para.get(13).toString());
-        jbxs.setText(newdata.Para.get(8).toString());
-        cxds.setText(newdata.Para.get(1).toString());
-        ydkj.setText(newdata.Para.get(15).toString());
-        ydgj.setText(newdata.Para.get(14).toString());
-        edkj.setText(newdata.Para.get(17).toString());
-        edgj.setText(newdata.Para.get(16).toString());
-        if ((newdata.Para.get(0) & 1)==1){
+        spinner.setSelection(newdata.Id%256);
+        wdsx.setText(newdata.Para.get(3).toString());
+        wdxx.setText(newdata.Para.get(4).toString());
+        fwsx.setText(newdata.Para.get(5).toString());
+        fwxx.setText(newdata.Para.get(6).toString());
+        flxz.setText(newdata.Para.get(7).toString());
+        jzxz.setText(newdata.Para.get(8).toString());
+        flxs.setText(newdata.Para.get(12).toString());
+        jzxs.setText(newdata.Para.get(13).toString());
+        slxs.setText(newdata.Para.get(10).toString());
+        xlxs.setText(newdata.Para.get(11).toString());
+        kjxs.setText(newdata.Para.get(14).toString());
+        jbxs.setText(newdata.Para.get(9).toString());
+        cxds.setText(newdata.Para.get(2).toString());
+        ydkj.setText(newdata.Para.get(16).toString());
+        ydgj.setText(newdata.Para.get(15).toString());
+        edkj.setText(newdata.Para.get(18).toString());
+        edgj.setText(newdata.Para.get(17).toString());
+        if ((newdata.Para.get(1) & 1)==1){
             qingwu.setChecked(true);
         }else {
             qingwu.setChecked(false);
         }
-        if ((newdata.Para.get(0) & 2)==2){
+        if ((newdata.Para.get(1) & 2)==2){
             fenwu.setChecked(true);
         }
         else {
             fenwu.setChecked(false);
         }
-        if ((newdata.Para.get(0) & 4)==4){
+        if ((newdata.Para.get(1) & 4)==4){
             fuliao.setChecked(true);
         }else {
             fuliao.setChecked(false);
         }
-        if ((newdata.Para.get(0) & 8)==8){
+        if ((newdata.Para.get(1) & 8)==8){
             junzhong.setChecked(true);
         }else {
             junzhong.setChecked(false);
@@ -175,10 +174,23 @@ public class FourthlyFragment extends Fragment {
                 String inputx= spinner.getSelectedItem().toString();
                 Log.e("设置发酵罐：",inputx);
                 Integer x=Integer.parseInt(inputx);
+//                ScanMessage lastmessage= LitePal.findLast(ScanMessage.class);
+//                Integer username=lastmessage.getUserNum();
+//                Integer mynum=lastmessage.getMyNum();
+                Integer Id=1*256+x;
+                Integer Cmd=1*256+43;
+                JSONArray jsonArray=new JSONArray();
+                int P10=Utility.MySecret(65535,Id);
+                int P11=Utility.MySecret(P10,Cmd);
+                int P1=Utility.MySecret(P11,1);
+                jsonArray.put(P1);
+                jsonArray.put(1);
                 MyMqttClient.sharedCenter().setSendData(
                         //"/sys/a1S917F388O/wenxin/thing/event/property/post",
-                        "/a1yPGkxyv1q/SimuApp/user/update",
-                        Utility.CommandJson(x,43,1),
+                        //"/a1yPGkxyv1q/SimuApp/user/update",
+                        "/a1gZWTRWzGi/P:0001:01/user/update",
+                       // Utility.CommandJson(x,43,1),
+                        Utility.SetCommandJson(Id,Cmd,jsonArray),
                         0,
                         false);
                 new Handler().postDelayed(new Runnable() {
@@ -190,14 +202,14 @@ public class FourthlyFragment extends Fragment {
                         if (dataString!=""){
                             Log.e("设置（Spinner）返回数据读取",dataString);
                             newdata=Utility.handleDataResponse(dataString);
-                            showDataInfo(newdata);//刷新界面
+                        //    showDataInfo(newdata);//刷新界面
                             prefs.edit().clear().commit();//清除SharedPreferences数据
                         }else {
                             Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
                         }
 
                     }
-                },1000);
+                },500);
             }
 
             @Override
@@ -253,7 +265,9 @@ public class FourthlyFragment extends Fragment {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                JSONArray jsonArray=new JSONArray();
+                String inputx= spinner.getSelectedItem().toString();
+                Integer x=Integer.parseInt(inputx);
+               // JSONArray jsonArray=new JSONArray();
                 //判断是否有参数为空
                 if(TextUtils.isEmpty(cxds.getText())||TextUtils.isEmpty(wdsx.getText())||TextUtils.isEmpty(wdxx.getText())
                 ||TextUtils.isEmpty(fwsx.getText())||TextUtils.isEmpty(fwxx.getText())||TextUtils.isEmpty(flxz.getText())
@@ -282,6 +296,33 @@ public class FourthlyFragment extends Fragment {
                 Integer P16=Integer.parseInt(ydkj.getText().toString().trim());
                 Integer P17=Integer.parseInt(edgj.getText().toString().trim());
                 Integer P18=Integer.parseInt(edkj.getText().toString().trim());
+//                ScanMessage lastmessage= LitePal.findLast(ScanMessage.class);
+//                Integer username=lastmessage.getUserNum();
+//                Integer mynum=lastmessage.getMyNum();
+                Integer Id=1*256+x;
+                Integer Cmd=1*256+27;
+                JSONArray jsonArray=new JSONArray();
+                int C0=Utility.MySecret(65535,Id);
+                int C1=Utility.MySecret(C0,Cmd);
+                int C2=Utility.MySecret(C1,P1);
+                int C3=Utility.MySecret(C2,P2);
+                int C4=Utility.MySecret(C3,P3);
+                int C5=Utility.MySecret(C4,P4);
+                int C6=Utility.MySecret(C5,P5);
+                int C7=Utility.MySecret(C6,P6);
+                int C8=Utility.MySecret(C7,P7);
+                int C9=Utility.MySecret(C8,P8);
+                int C10=Utility.MySecret(C9,P9);
+                int C11=Utility.MySecret(C10,P10);
+                int C12=Utility.MySecret(C11,P11);
+                int C13=Utility.MySecret(C12,P12);
+                int C14=Utility.MySecret(C13,P13);
+                int C15=Utility.MySecret(C14,P14);
+                int C16=Utility.MySecret(C15,P15);
+                int C17=Utility.MySecret(C16,P16);
+                int C18=Utility.MySecret(C17,P17);
+                int P0=Utility.MySecret(C18,P18);
+                jsonArray.put(P0);
                 jsonArray.put(P1);
                 jsonArray.put(P2);
                 jsonArray.put(P3);
@@ -300,15 +341,16 @@ public class FourthlyFragment extends Fragment {
                 jsonArray.put(P16);
                 jsonArray.put(P17);
                 jsonArray.put(P18);
-                String inputx= spinner.getSelectedItem().toString();
-                Integer x=Integer.parseInt(inputx);
+
                 MyMqttClient.sharedCenter().setSendData(
                         //"/sys/a1S917F388O/wenxin/thing/event/property/post",
-                        "/a1yPGkxyv1q/SimuApp/user/update",
-                        SetCommandJson(x,27,jsonArray),
+                        //"/a1yPGkxyv1q/SimuApp/user/update",
+                        "/a1S917F388O/P:0001:01/user/update",
+                        //SetCommandJson(x,27,jsonArray),
+                        Utility.SetCommandJson(Id,Cmd,jsonArray),
                         0,
                         false);
-                Log.e("EditText","发送数据："+SetCommandJson(x,27,jsonArray));
+                Log.e("EditText","发送数据："+Utility.SetCommandJson(Id,Cmd,jsonArray));
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -318,13 +360,13 @@ public class FourthlyFragment extends Fragment {
                         if (dataString!=""){
                             Log.e("发酵罐按钮数据读取",dataString);
                             newdata=Utility.handleDataResponse(dataString);
-                            showDataInfo(newdata);//刷新界面
+                          //  showDataInfo(newdata);//刷新界面
                             prefs.edit().clear().commit();//清除SharedPreferences数据
                         }else {
                             Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
                         }
                     }
-                },1000);
+                },500);
             }
         });
     }

@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.json.JSONArray;
 
 import static com.example.tab.Utility.BtnShow;
 
@@ -92,8 +93,7 @@ public class SecondFragment extends Fragment {
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Utility.requestData();//发送请求
-                Log.e("下拉刷新","手动已发送查询指令!");
+               Utility.requestData();//发送请求
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -110,7 +110,7 @@ public class SecondFragment extends Fragment {
                         }
                         swipeRefresh.setRefreshing(false);
                     }
-                },1000);
+                },500);
             }
         });
         //发酵罐控制部分按钮点击
@@ -146,107 +146,107 @@ public class SecondFragment extends Fragment {
     //展示Data实体类中的数据
     //发酵罐控制部分数据展示
     private void showFjgDataInfo(Data newdata){
-        spin_fajiao.setSelection(newdata.Id);
+        spin_fajiao.setSelection(newdata.Id%256);
         //刷新Button
-        if ((newdata.Para.get(4) & 1)==1){
+        if ((newdata.Para.get(5) & 1)==1){
             BtnShow(jiaoban,"搅拌关","#FF0000");
 
 
         }else {
             BtnShow(jiaoban,"搅拌开","#00AA44");
         }
-        if ((newdata.Para.get(4) & 2)==2){
+        if ((newdata.Para.get(5) & 2)==2){
             BtnShow(xieliao,"卸料关","#FF0000");
 
 
         }else {
             BtnShow(xieliao,"卸料开","#00AA44");
         }
-        if ((newdata.Para.get(4) & 4)==4){
+        if ((newdata.Para.get(5) & 4)==4){
             BtnShow(paosui,"破碎关","#FF0000");
 
 
         }else {
             BtnShow(paosui,"破碎开","#00AA44");
         }
-        if ((newdata.Para.get(4) & 8)==8){
+        if ((newdata.Para.get(5) & 8)==8){
             BtnShow(yure,"预热关","#FF0000");
 
 
         }else {
             BtnShow(yure,"预热开","#00AA44");
         }
-        if ((newdata.Para.get(4) & 16)==16){
+        if ((newdata.Para.get(5) & 16)==16){
             BtnShow(bengzhan,"泵站关","#FF0000");
 
 
         }else {
             BtnShow(bengzhan,"泵站开","#00AA44");
         }
-        if ((newdata.Para.get(4) & 32)==32){
+        if ((newdata.Para.get(5) & 32)==32){
             BtnShow(chuwei,"除味关","#FF0000");
 
 
         }else {
             BtnShow(chuwei,"除味开","#00AA44");
         }
-        if ((newdata.Para.get(4) & 64)==64){
+        if ((newdata.Para.get(5) & 64)==64){
             BtnShow(honggan,"烘干关","#FF0000");
 
 
         }else {
             BtnShow(honggan,"烘干开","#00AA44");
         }
-        if ((newdata.Para.get(4) & 256)==256){
+        if ((newdata.Para.get(5) & 256)==256){
             BtnShow(fuliao,"辅料关","#FF0000");
 
 
         }else {
             BtnShow(fuliao,"辅料开","#00AA44");
         }
-        if ((newdata.Para.get(4) & 512)==512){
+        if ((newdata.Para.get(5) & 512)==512){
             BtnShow(junzhong,"菌种关","#FF0000");
 
 
         }else {
             BtnShow(junzhong,"菌种开","#00AA44");
         }
-        if ((newdata.Para.get(4) & 1024)==1024){
+        if ((newdata.Para.get(5) & 1024)==1024){
             BtnShow(fudai,"辅带关","#FF0000");
 
 
         }else {
             BtnShow(fudai,"辅带开","#00AA44");
         }
-        if ((newdata.Para.get(4) & 2048)==2048){
+        if ((newdata.Para.get(5) & 2048)==2048){
             BtnShow(pingjiao,"平绞关","#FF0000");
 
 
         }else {
             BtnShow(pingjiao,"平绞开","#00AA44");
         }
-        if ((newdata.Para.get(4) & 4096)==4096){
+        if ((newdata.Para.get(5) & 4096)==4096){
             BtnShow(shusong,"输送关","#FF0000");
 
 
         }else {
             BtnShow(shusong,"输送开","#00AA44");
         }
-        if ((newdata.Para.get(4) & 8192)==8192){
+        if ((newdata.Para.get(5) & 8192)==8192){
             BtnShow(jieru,"接入关","#FF0000");
 
 
         }else {
             BtnShow(jieru,"接入开","#00AA44");
         }
-        if ((newdata.Para.get(4) & 16384)==16384){
+        if ((newdata.Para.get(5) & 16384)==16384){
             BtnShow(tuichu,"退出关","#FF0000");
 
 
         }else {
             BtnShow(tuichu,"退出开","#00AA44");
         }
-        if ((newdata.Para.get(4) & 32768)==32768){
+        if ((newdata.Para.get(5) & 32768)==32768){
             BtnShow(baojing,"报警关","#FF0000");
 
 
@@ -256,65 +256,65 @@ public class SecondFragment extends Fragment {
     }
     //圈舍控制部分数据展示
     private void showJsDataInfo(Data newdata) {
-        spin_juanshe.setSelection(newdata.Id - 16);
+        spin_juanshe.setSelection((newdata.Id - 16)%256);
         //刷新Button
-        if ((newdata.Para.get(4) & 1)==1){
+        if ((newdata.Para.get(5) & 1)==1){
             BtnShow(qingwu1,"清污关","#FF0000");
 
 
         }else {
             BtnShow(qingwu1,"清污开","#00AA44");
         }
-        if ((newdata.Para.get(4) & 2)==2){
+        if ((newdata.Para.get(5) & 2)==2){
             BtnShow(qingwu2,"清污关","#FF0000");
 
 
         }else {
             BtnShow(qingwu2,"清污开","#00AA44");
         }
-        if ((newdata.Para.get(4) & 4)==4){
+        if ((newdata.Para.get(5) & 4)==4){
             BtnShow(qingwu3,"清污关","#FF0000");
 
 
         }else {
             BtnShow(qingwu3,"清污开","#00AA44");
         }
-        if ((newdata.Para.get(8) & 8)==8){
+        if ((newdata.Para.get(9) & 8)==8){
             BtnShow(qingwu4,"清污关","#FF0000");
 
 
         }else {
             BtnShow(qingwu4,"清污开","#00AA44");
         }
-        if ((newdata.Para.get(4) & 16)==16){
+        if ((newdata.Para.get(5) & 16)==16){
             BtnShow(qingwu5,"清污关","#FF0000");
 
 
         }else {
             BtnShow(qingwu5,"清污开","#00AA44");
         }
-        if ((newdata.Para.get(4) & 32)==32){
+        if ((newdata.Para.get(5) & 32)==32){
             BtnShow(qingwu6,"清污关","#FF0000");
 
 
         }else {
             BtnShow(qingwu6,"清污开","#00AA44");
         }
-        if ((newdata.Para.get(4) & 64)==64){
+        if ((newdata.Para.get(5) & 64)==64){
             BtnShow(qingwu7,"清污关","#FF0000");
 
 
         }else {
             BtnShow(qingwu7,"清污开","#00AA44");
         }
-        if ((newdata.Para.get(4) & 128)==128){
+        if ((newdata.Para.get(5) & 128)==128){
             BtnShow(qingwu8,"清污关","#FF0000");
 
 
         }else {
             BtnShow(qingwu8,"清污开","#00AA44");
         }
-        if ((newdata.Para.get(4) & 32768)==32768){
+        if ((newdata.Para.get(5) & 32768)==32768){
             BtnShow(jiebodai,"接驳带关","#FF0000");
 
 
@@ -335,10 +335,23 @@ public class SecondFragment extends Fragment {
                 String inputx= spin_fajiao.getSelectedItem().toString();
                 Log.e("手动设置发酵罐：",inputx);
                 Integer x=Integer.parseInt(inputx);
+//                ScanMessage lastmessage= LitePal.findLast(ScanMessage.class);
+//                Integer username=lastmessage.getUserNum();
+//                Integer mynum=lastmessage.getMyNum();
+                Integer Id=1*256+x;
+                Integer Cmd=1*256+112;
+                JSONArray jsonArray=new JSONArray();
+                int P10=Utility.MySecret(65535,Id);
+                int P11=Utility.MySecret(P10,Cmd);
+                int P1=Utility.MySecret(P11,1);
+                jsonArray.put(P1);
+                jsonArray.put(1);
                 MyMqttClient.sharedCenter().setSendData(
                         //"/sys/a1S917F388O/wenxin/thing/event/property/post",
-                        "/a1yPGkxyv1q/SimuApp/user/update",
-                        Utility.CommandJson(x,112,1),
+                        //"/a1yPGkxyv1q/SimuApp/user/update",
+                        "/a1S917F388O/P:0001:01/user/update",
+                       // Utility.CommandJson(x,112,1),
+                        Utility.SetCommandJson(Id,Cmd,jsonArray),
                         0,
                         false);
                 new Handler().postDelayed(new Runnable() {
@@ -350,13 +363,13 @@ public class SecondFragment extends Fragment {
                         if (dataString!=""){
                             Log.e("（手动）发酵罐Spinner返回数据读取",dataString);
                             newdata=Utility.handleDataResponse(dataString);
-                            showFjgDataInfo(newdata);//刷新界面
+                           // showFjgDataInfo(newdata);//刷新界面
                             prefs.edit().clear().commit();//清除SharedPreferences数据
                         }else {
                             Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
                         }
                     }
-                },1000);
+                },500);
             }
 
             @Override
@@ -373,13 +386,26 @@ public class SecondFragment extends Fragment {
             public void onClick(View v) {
                 String inputx= spin_fajiao.getSelectedItem().toString();
                 Integer x=Integer.parseInt(inputx);
+//                ScanMessage lastmessage= LitePal.findLast(ScanMessage.class);
+//                Integer username=lastmessage.getUserNum();
+//                Integer mynum=lastmessage.getMyNum();
+                Integer Id=1*256+x;
+                Integer Cmd=1*256+67;
+                JSONArray jsonArray=new JSONArray();
+                int P10=Utility.MySecret(65535,Id);
+                int P11=Utility.MySecret(P10,Cmd);
+                int P1=Utility.MySecret(P11,para);
+                jsonArray.put(P1);
+                jsonArray.put(para);
                 MyMqttClient.sharedCenter().setSendData(
                         //"/sys/a1S917F388O/wenxin/thing/event/property/post",
-                        "/a1yPGkxyv1q/SimuApp/user/update",
-                        Utility.CommandJson(x,67,para),
+                        //"/a1yPGkxyv1q/SimuApp/user/update",
+                        "/a1S917F388O/P:0001:01/user/update",
+                       // Utility.CommandJson(x,67,para),
+                        Utility.SetCommandJson(Id,Cmd,jsonArray),
                         0,
                         false);
-                Log.e("Btn","发酵罐已发送指令"+ Utility.CommandJson(x,67,para));
+                Log.e("Btn","发酵罐已发送指令"+Utility.SetCommandJson(Id,Cmd,jsonArray));
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -389,13 +415,13 @@ public class SecondFragment extends Fragment {
                         if (dataString!=""){
                             Log.e("发酵罐按钮数据读取",dataString);
                             newdata=Utility.handleDataResponse(dataString);
-                            showFjgDataInfo(newdata);//刷新界面
+                          //  showFjgDataInfo(newdata);//刷新界面
                             prefs.edit().clear().commit();//清除SharedPreferences数据
                         }else {
                             Toast.makeText(getActivity(), "获取数据失败，请先刷新界面或检查设备是否上线！", Toast.LENGTH_SHORT).show();
                         }
                     }
-                },1000);
+                },500);
             }
         });
     }
@@ -412,10 +438,23 @@ public class SecondFragment extends Fragment {
                 String inputx= spin_juanshe.getSelectedItem().toString();
                 Log.e("手动设置圈舍：",inputx);
                 Integer z=Integer.parseInt(inputx);
+//                ScanMessage lastmessage= LitePal.findLast(ScanMessage.class);
+//                Integer username=lastmessage.getUserNum();
+//                Integer mynum=lastmessage.getMyNum();
+                Integer Id=1*256+z+16;
+                Integer Cmd=1*256+112;
+                JSONArray jsonArray=new JSONArray();
+                int P10=Utility.MySecret(65535,Id);
+                int P11=Utility.MySecret(P10,Cmd);
+                int P1=Utility.MySecret(P11,1);
+                jsonArray.put(P1);
+                jsonArray.put(1);
                 MyMqttClient.sharedCenter().setSendData(
                         //"/sys/a1S917F388O/wenxin/thing/event/property/post",
-                        "/a1yPGkxyv1q/SimuApp/user/update",
-                        Utility.CommandJson(z+16,112,1),
+                       // "/a1yPGkxyv1q/SimuApp/user/update",
+                        "/a1S917F388O/P:0001:01/user/update",
+                       // Utility.CommandJson(z+16,112,1),
+                        Utility.SetCommandJson(Id,Cmd,jsonArray),
                         0,
                         false);
                 new Handler().postDelayed(new Runnable() {
@@ -427,14 +466,14 @@ public class SecondFragment extends Fragment {
                         if (dataString!=""){
                             Log.e("（手动）圈舍Spinner返回数据读取",dataString);
                             newdata=Utility.handleDataResponse(dataString);
-                            showJsDataInfo(newdata);//刷新界面
+                           showJsDataInfo(newdata);//刷新界面
                             prefs.edit().clear().commit();//清除SharedPreferences数据
                         }else {
                             Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
                         }
 
                     }
-                },1000);
+                },500);
             }
 
             @Override
@@ -451,13 +490,26 @@ public class SecondFragment extends Fragment {
             public void onClick(View v) {
                 final String inputz= spin_juanshe.getSelectedItem().toString();
                 Integer z=Integer.parseInt(inputz);
+//                ScanMessage lastmessage= LitePal.findLast(ScanMessage.class);
+//                Integer username=lastmessage.getUserNum();
+//                Integer mynum=lastmessage.getMyNum();
+                Integer Id=1*256+z+16;
+                Integer Cmd=1*256+67;
+                JSONArray jsonArray=new JSONArray();
+                int P10=Utility.MySecret(65535,Id);
+                int P11=Utility.MySecret(P10,Cmd);
+                int P1=Utility.MySecret(P11,para);
+                jsonArray.put(P1);
+                jsonArray.put(para);
                 MyMqttClient.sharedCenter().setSendData(
                         //"/sys/a1S917F388O/wenxin/thing/event/property/post",
-                        "/a1yPGkxyv1q/SimuApp/user/update",
-                        Utility.CommandJson(z+16,67,para),
+                       // "/a1yPGkxyv1q/SimuApp/user/update",
+                        "/a1S917F388O/P:0001:01/user/update",
+                       // Utility.CommandJson(z+16,67,para),
+                        Utility.SetCommandJson(Id,Cmd,jsonArray),
                         0,
                         false);
-                Log.e("Btn","圈舍已发送指令"+ Utility.CommandJson(z+16,67,para));
+                Log.e("Btn","圈舍已发送指令"+ Utility.SetCommandJson(Id,Cmd,jsonArray));
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -467,13 +519,13 @@ public class SecondFragment extends Fragment {
                         if (dataString!=""){
                             Log.e("圈舍按钮数据读取",dataString);
                             newdata=Utility.handleDataResponse(dataString);
-                            showJsDataInfo(newdata);//刷新界面
+                         //   showJsDataInfo(newdata);//刷新界面
                             prefs.edit().clear().commit();//清除SharedPreferences数据
                         }else {
                             Toast.makeText(getActivity(), "获取数据失败，请先刷新界面或检查设备是否上线！", Toast.LENGTH_SHORT).show();
                         }
                     }
-                },1000);
+                },500);
             }
         });
     }
@@ -482,13 +534,26 @@ public class SecondFragment extends Fragment {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                ScanMessage lastmessage= LitePal.findLast(ScanMessage.class);
+//                Integer username=lastmessage.getUserNum();
+//                Integer mynum=lastmessage.getMyNum();
+                Integer Id=1*256+1;
+                Integer Cmd=1*256+67;
+                JSONArray jsonArray=new JSONArray();
+                int P10=Utility.MySecret(65535,Id);
+                int P11=Utility.MySecret(P10,Cmd);
+                int P1=Utility.MySecret(P11,13);
+                jsonArray.put(P1);
+                jsonArray.put(13);
                 MyMqttClient.sharedCenter().setSendData(
                 //"/sys/a1S917F388O/wenxin/thing/event/property/post",
-                "/a1yPGkxyv1q/SimuApp/user/update",
-                "{\"method\":\"thing.event.property.post\",\"id\":\"1111\",\"params\":{\"Id\":1,\"Cmd\":67,\"Para\":[13]},\"version\":\"1.0.0\"}",
+                //"/a1yPGkxyv1q/SimuApp/user/update",
+                "/a1gZWTRWzGi/P:0001:01/user/update",
+                //"{\"method\":\"thing.event.property.post\",\"id\":\"1111\",\"params\":{\"Id\":1,\"Cmd\":67,\"Para\":[13]},\"version\":\"1.0.0\"}",
+                Utility.SetCommandJson(Id,Cmd,jsonArray),
                 0,
                 false);
-                Log.e("Btn","圈舍已发送指令{\"method\":\"thing.event.property.post\",\"params\":{\"Para\":[13],\"Id\":1,\"Cmd\":67},\"version\":\"1.0.0\"}");
+                Log.e("Btn","圈舍已发送指令:"+Utility.SetCommandJson(Id,Cmd,jsonArray));
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -505,36 +570,9 @@ public class SecondFragment extends Fragment {
                         }
 
                     }
-                },1000);
+                },500);
             }
         });
 
     }
-//    @Override
-//    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
-//        //   进入当前Fragment
-//        if (enter && !isGetData) {
-//            isGetData = true;
-//            //   这里可以做网络请求或者需要的数据刷新操作
-////            GetData();
-//            Utility.requestData();//发送请求
-//            Log.e("下拉刷新","手动已发送查询指令!");
-//            new Handler().postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    //从SharedPreferences读取数据
-//                    prefs=getActivity().getSharedPreferences("datastore",0);
-//                    String dataString=prefs.getString("data","");
-//                    Log.e("手动数据读取",dataString);
-//                    newdata=Utility.handleDataResponse(dataString);
-//                    showFjgDataInfo(newdata);
-//                    swipeRefresh.setRefreshing(false);
-//                }
-//            },1000);
-//        } else {
-//            isGetData = false;
-//        }
-//        return super.onCreateAnimation(transit, enter, nextAnim);
-//    }
-
 }

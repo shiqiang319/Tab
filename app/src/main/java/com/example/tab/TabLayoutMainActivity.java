@@ -16,8 +16,8 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import me.jessyan.autosize.AutoSizeConfig;
 import me.jessyan.autosize.internal.CustomAdapt;
+
 
 public class TabLayoutMainActivity extends AppCompatActivity implements CustomAdapt {
     //自定义活动的自适应参数
@@ -77,14 +77,14 @@ public class TabLayoutMainActivity extends AppCompatActivity implements CustomAd
             @Override
             public void callback(String Topic, int qos) {
                 //if (Topic.equals("/sys/a1S917F388O/shebei/thing/service/property/set")){//订阅1111成功
-                 if (Topic.equals("/a1yPGkxyv1q/Fjg1/user/get")){//订阅1111成功
+                 if (Topic.equals("/a1S917F388O/P:0001:01/user/get")){//订阅1111成功
                     stopTimerSubscribeTopic();//订阅到主题,停止订阅
                 }
             }
         });
         startTimerSubscribeTopic();//定时订阅主题
         //MyMqttClient.sharedCenter().setUnSubscribe("/sys/a1S917F388O/shebei/thing/service/property/set");//取消订阅消息
-        MyMqttClient.sharedCenter().setUnSubscribe("/a1yPGkxyv1q/Fjg1/user/get");//取消订阅消息
+        MyMqttClient.sharedCenter().setUnSubscribe("/a1S917F388O/P:0001:01/user/get");//取消订阅消息
     }
 
     private void initView() {
@@ -186,7 +186,7 @@ public class TabLayoutMainActivity extends AppCompatActivity implements CustomAd
             TimerTaskSubscribeTopic = new TimerTask() {
                 @Override
                 public void run() {
-                    MyMqttClient.sharedCenter().setSubscribe("/a1yPGkxyv1q/Fjg1/user/get",0);//订阅主题1111,消息等级0
+                    MyMqttClient.sharedCenter().setSubscribe("/a1S917F388O/P:0001:01/user/get",0);//订阅主题1111,消息等级0
                     //MyMqttClient.sharedCenter().setSubscribe("/sys/a1S917F388O/shebei/thing/service/property/set",0);//订阅主题1111,消息等级0
                 }
             };
