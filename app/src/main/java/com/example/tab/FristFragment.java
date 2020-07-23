@@ -32,6 +32,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.tab.Utility.BtnShow;
+import static com.example.tab.Utility.fabutopic;
+import static com.example.tab.Utility.mynum;
+import static com.example.tab.Utility.username;
 
 public class FristFragment extends Fragment {
     private Spinner  spinner;
@@ -57,7 +60,7 @@ public class FristFragment extends Fragment {
     private List<CharSequence> eduList = null;
     private ArrayAdapter<CharSequence> eduAdapter = null;
     private int num;
-    private String fabutopic;
+   // private String fabutopic;
 
     @SuppressLint("ResourceAsColor")
     @Nullable
@@ -79,9 +82,8 @@ public class FristFragment extends Fragment {
         zidong=view.findViewById(R.id.btn6);
         zanting=view.findViewById(R.id.btn7);
         swipeRefresh=view.findViewById(R.id.swipe_refresh);
-        //Topic
+
         ScanMessage lastmessage= LitePal.findLast(ScanMessage.class);
-        fabutopic=lastmessage.getFabuTopic().trim();
         //设置spinner
         eduList = new ArrayList<CharSequence>();
         num=Integer.valueOf(lastmessage.getFanum().trim());
@@ -203,45 +205,39 @@ public class FristFragment extends Fragment {
                 if (cardNumber.equals("0")) {
                     return;
                 }
-                    Toast.makeText(getActivity(), "你正在操作发酵罐：" + cardNumber, Toast.LENGTH_SHORT).show();
-                    String inputx= spinner.getSelectedItem().toString();
-                    Log.e("设置发酵罐：",inputx);
-                    Integer x=Integer.parseInt(inputx);
-//                ScanMessage lastmessage= LitePal.findLast(ScanMessage.class);
-//                Integer username=lastmessage.getUserNum();
-//                Integer mynum=lastmessage.getMyNum();
-                Integer Id=1*256+x;
-                Integer Cmd=1*256+112;
+                Toast.makeText(getActivity(), "你正在操作发酵罐：" + cardNumber, Toast.LENGTH_SHORT).show();
+                String inputx= spinner.getSelectedItem().toString();
+                Log.e("设置发酵罐：",inputx);
+                Integer x=Integer.parseInt(inputx);
+                Integer Id=username*256+x;
+                Integer Cmd=mynum*256+112;
                 JSONArray jsonArray=new JSONArray();
                 int P10=Utility.MySecret(65535,Id);
                 int P11=Utility.MySecret(P10,Cmd);
                 int P1=Utility.MySecret(P11,1);
                 jsonArray.put(P1);
                 jsonArray.put(1);
-                    MyMqttClient.sharedCenter().setSendData(
-                           //"/sys/a1S917F388O/wenxin/thing/event/property/post",
-                            //"/a1yPGkxyv1q/SimuApp/user/update",
-                            //"/a1gZWTRWzGi/P:0001:01/user/update",
-                            fabutopic,
-                            Utility.SetCommandJson(Id,Cmd,jsonArray),
-                            0,
-                            false);
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            //从SharedPreferences读取数据
-                            prefs=getActivity().getSharedPreferences("datastore",0);
-                            dataString=prefs.getString("data","");
-                            if (dataString!=""){
-                                Log.e("自动（Spinner）返回数据读取",dataString);
-                                newdata=Utility.handleDataResponse(dataString);
-                              //  showDataInfo(newdata);//刷新界面
-                                prefs.edit().clear().commit();//清除SharedPreferences数据
-                            }else {
-                                Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
-                            }
+                MyMqttClient.sharedCenter().setSendData(
+                    fabutopic,
+                    Utility.SetCommandJson(Id,Cmd,jsonArray),
+                    0,
+                    false);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //从SharedPreferences读取数据
+                        prefs=getActivity().getSharedPreferences("datastore",0);
+                        dataString=prefs.getString("data","");
+                        if (dataString!=""){
+                            Log.e("自动（Spinner）返回数据读取",dataString);
+                            newdata=Utility.handleDataResponse(dataString);
+                            showDataInfo(newdata);//刷新界面
+                            prefs.edit().clear().commit();//清除SharedPreferences数据
+                        }else {
+                            Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
                         }
-                    },500);
+                    }
+                },500);
 
             }
 
@@ -264,11 +260,8 @@ public class FristFragment extends Fragment {
                 if (btn.getText().equals(function1)){
                     para=f1para;
                 }else if (btn.getText().equals(function2)){para=f2parn;}
-//                ScanMessage lastmessage= LitePal.findLast(ScanMessage.class);
-//                Integer username=lastmessage.getUserNum();
-//                Integer mynum=lastmessage.getMyNum();
-                Integer Id=1*256+x;
-                Integer Cmd=1*256+97;
+                Integer Id=username*256+x;
+                Integer Cmd=mynum*256+97;
                 JSONArray jsonArray=new JSONArray();
                 int P10=Utility.MySecret(65535,Id);
                 int P11=Utility.MySecret(P10,Cmd);
@@ -277,14 +270,10 @@ public class FristFragment extends Fragment {
                 jsonArray.put(para);
 
                 MyMqttClient.sharedCenter().setSendData(
-                        //"/sys/a1S917F388O/wenxin/thing/event/property/post",
-                        //"/a1yPGkxyv1q/SimuApp/user/update",
-                        //"/a1S917F388O/P:0001:01/user/update",
-                        fabutopic,
-                        //Utility.CommandJson(x,97,para),
-                        Utility.SetCommandJson(Id,Cmd,jsonArray),
-                        0,
-                        false);
+                    fabutopic,
+                    Utility.SetCommandJson(Id,Cmd,jsonArray),
+                    0,
+                    false);
                 Log.e("Btn","已发送指令"+Utility.SetCommandJson(Id,Cmd,jsonArray));
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -295,7 +284,7 @@ public class FristFragment extends Fragment {
                         if (dataString!=""){
                             Log.e("自动（按钮1）数据读取",dataString);
                             newdata=Utility.handleDataResponse(dataString);
-                          //  showDataInfo(newdata);//刷新界面
+                            showDataInfo(newdata);//刷新界面
                             prefs.edit().clear().commit();//清除SharedPreferences数据
                         }else {
                             Toast.makeText(getActivity(), "获取数据失败，请先刷新界面或检查设备是否上线！", Toast.LENGTH_SHORT).show();
@@ -312,11 +301,8 @@ public class FristFragment extends Fragment {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                ScanMessage lastmessage= LitePal.findLast(ScanMessage.class);
-//                Integer username=lastmessage.getUserNum();
-//                Integer mynum=lastmessage.getMyNum();
-                Integer Id=1*256+1;
-                Integer Cmd=1*256+97;
+                Integer Id=username*256+1;
+                Integer Cmd=mynum*256+97;
                 if (btn.getText().equals(function)) {
                     JSONArray jsonArray=new JSONArray();
                     int P10=Utility.MySecret(65535,Id);
@@ -325,13 +311,10 @@ public class FristFragment extends Fragment {
                     jsonArray.put(P1);
                     jsonArray.put(para1);
                     MyMqttClient.sharedCenter().setSendData(
-                            //"/sys/a1S917F388O/wenxin/thing/event/property/post",
-                            //"/a1S917F388O/P:0001:01/user/update",
-                            fabutopic,
-                            //Utility.CommandJson(1, 97,para1),
-                            Utility.SetCommandJson(Id,Cmd,jsonArray),
-                            0,
-                            false);
+                        fabutopic,
+                        Utility.SetCommandJson(Id,Cmd,jsonArray),
+                        0,
+                        false);
                 } else {
                     JSONArray jsonArray=new JSONArray();
                     int P10=Utility.MySecret(65535,Id);
@@ -340,13 +323,10 @@ public class FristFragment extends Fragment {
                     jsonArray.put(P1);
                     jsonArray.put(para2);
                     MyMqttClient.sharedCenter().setSendData(
-                            //"/sys/a1S917F388O/wenxin/thing/event/property/post",
-                            //"/a1yPGkxyv1q/SimuApp/user/update",
-                            fabutopic,
-                            //Utility.CommandJson(1, 97,para2),
-                            Utility.SetCommandJson(Id,Cmd,jsonArray),
-                            0,
-                            false);
+                        fabutopic,
+                        Utility.SetCommandJson(Id,Cmd,jsonArray),
+                        0,
+                        false);
                 }
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -357,7 +337,7 @@ public class FristFragment extends Fragment {
                         if (dataString!=""){
                             Log.e("自动（按钮2）数据读取",dataString);
                             newdata=Utility.handleDataResponse(dataString);
-                           // showDataInfo(newdata);//刷新界面
+                            showDataInfo(newdata);//刷新界面
                             prefs.edit().clear().commit();//清除SharedPreferences数据
                         }else {
                             Toast.makeText(getActivity(), "获取数据失败，请先刷新界面或检查设备是否上线！", Toast.LENGTH_SHORT).show();

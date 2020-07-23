@@ -35,6 +35,8 @@ import java.util.List;
 
 import static com.example.tab.Utility.SetCommandJson;
 import static com.example.tab.Utility.fabutopic;
+import static com.example.tab.Utility.mynum;
+import static com.example.tab.Utility.username;
 
 public class FourthlyFragment extends Fragment {
     private int P1=0;
@@ -97,9 +99,8 @@ public class FourthlyFragment extends Fragment {
         fuliao=view.findViewById(R.id.cb_3);
         junzhong=view.findViewById(R.id.cb_4);
         canshu=view.findViewById(R.id.btn_cspz);
-        //Topic
+
         ScanMessage lastmessage= LitePal.findLast(ScanMessage.class);
-        String fabutopic=lastmessage.getFabuTopic().trim();
         //设置spinner
         eduList = new ArrayList<CharSequence>();
         num=Integer.valueOf(lastmessage.getFanum().trim());
@@ -199,11 +200,8 @@ public class FourthlyFragment extends Fragment {
                 String inputx= spinner.getSelectedItem().toString();
                 Log.e("设置发酵罐：",inputx);
                 Integer x=Integer.parseInt(inputx);
-//                ScanMessage lastmessage= LitePal.findLast(ScanMessage.class);
-//                Integer username=lastmessage.getUserNum();
-//                Integer mynum=lastmessage.getMyNum();
-                Integer Id=1*256+x;
-                Integer Cmd=1*256+43;
+                Integer Id=username*256+x;
+                Integer Cmd=mynum*256+43;
                 JSONArray jsonArray=new JSONArray();
                 int P10=Utility.MySecret(65535,Id);
                 int P11=Utility.MySecret(P10,Cmd);
@@ -211,14 +209,10 @@ public class FourthlyFragment extends Fragment {
                 jsonArray.put(P1);
                 jsonArray.put(1);
                 MyMqttClient.sharedCenter().setSendData(
-                        //"/sys/a1S917F388O/wenxin/thing/event/property/post",
-                        //"/a1yPGkxyv1q/SimuApp/user/update",
-                        //"/a1gZWTRWzGi/P:0001:01/user/update",
-                        fabutopic,
-                       // Utility.CommandJson(x,43,1),
-                        Utility.SetCommandJson(Id,Cmd,jsonArray),
-                        0,
-                        false);
+                    fabutopic,
+                    Utility.SetCommandJson(Id,Cmd,jsonArray),
+                    0,
+                    false);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -228,7 +222,7 @@ public class FourthlyFragment extends Fragment {
                         if (dataString!=""){
                             Log.e("设置（Spinner）返回数据读取",dataString);
                             newdata=Utility.handleDataResponse(dataString);
-                        //    showDataInfo(newdata);//刷新界面
+                             showDataInfo(newdata);//刷新界面
                             prefs.edit().clear().commit();//清除SharedPreferences数据
                         }else {
                             Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
@@ -322,11 +316,8 @@ public class FourthlyFragment extends Fragment {
                 Integer P16=Integer.parseInt(ydkj.getText().toString().trim());
                 Integer P17=Integer.parseInt(edgj.getText().toString().trim());
                 Integer P18=Integer.parseInt(edkj.getText().toString().trim());
-//                ScanMessage lastmessage= LitePal.findLast(ScanMessage.class);
-//                Integer username=lastmessage.getUserNum();
-//                Integer mynum=lastmessage.getMyNum();
-                Integer Id=1*256+x;
-                Integer Cmd=1*256+27;
+                Integer Id=username*256+x;
+                Integer Cmd=mynum*256+27;
                 JSONArray jsonArray=new JSONArray();
                 int C0=Utility.MySecret(65535,Id);
                 int C1=Utility.MySecret(C0,Cmd);
@@ -369,14 +360,10 @@ public class FourthlyFragment extends Fragment {
                 jsonArray.put(P18);
 
                 MyMqttClient.sharedCenter().setSendData(
-                        //"/sys/a1S917F388O/wenxin/thing/event/property/post",
-                        //"/a1yPGkxyv1q/SimuApp/user/update",
-                        //"/a1S917F388O/P:0001:01/user/update",
-                        fabutopic,
-                        //SetCommandJson(x,27,jsonArray),
-                        Utility.SetCommandJson(Id,Cmd,jsonArray),
-                        0,
-                        false);
+                    fabutopic,
+                    Utility.SetCommandJson(Id,Cmd,jsonArray),
+                    0,
+                    false);
                 Log.e("EditText","发送数据："+Utility.SetCommandJson(Id,Cmd,jsonArray));
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -387,7 +374,7 @@ public class FourthlyFragment extends Fragment {
                         if (dataString!=""){
                             Log.e("发酵罐按钮数据读取",dataString);
                             newdata=Utility.handleDataResponse(dataString);
-                          //  showDataInfo(newdata);//刷新界面
+                            showDataInfo(newdata);//刷新界面
                             prefs.edit().clear().commit();//清除SharedPreferences数据
                         }else {
                             Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();

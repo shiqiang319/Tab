@@ -28,6 +28,8 @@ import org.litepal.LitePal;
 
 import static com.example.tab.Utility.SetCommandJson;
 import static com.example.tab.Utility.fabutopic;
+import static com.example.tab.Utility.mynum;
+import static com.example.tab.Utility.username;
 
 public class FifthlyFragment extends Fragment {
     private SwipeRefreshLayout swipeRefresh;
@@ -67,8 +69,6 @@ public class FifthlyFragment extends Fragment {
         canshu=view.findViewById(R.id.btn_cspz2);
         btnsq=view.findViewById(R.id.btn_sysq);
 
-        ScanMessage lastmessage= LitePal.findLast(ScanMessage.class);
-        String fabutopic=lastmessage.getFabuTopic().trim();
         //下拉刷新
         swipeRefresh.setColorSchemeColors(R.color.colorPrimary);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -148,11 +148,8 @@ public class FifthlyFragment extends Fragment {
                 if (sysq.getText().toString().trim().equals("正常")){
                      P8=1;
                 }else P8=0;
-//                ScanMessage lastmessage= LitePal.findLast(ScanMessage.class);
-//                Integer username=lastmessage.getUserNum();
-//                Integer mynum=lastmessage.getMyNum();
-                Integer Id=1*256+1;
-                Integer Cmd=1*256+26;
+                Integer Id=username*256+1;
+                Integer Cmd=mynum*256+26;
                 JSONArray jsonArray=new JSONArray();
                 int C0=Utility.MySecret(65535,Id);
                 int C1=Utility.MySecret(C0,Cmd);
@@ -179,14 +176,10 @@ public class FifthlyFragment extends Fragment {
                 jsonArray.put(P9);
                 jsonArray.put(P10);
                 MyMqttClient.sharedCenter().setSendData(
-                        //"/sys/a1S917F388O/wenxin/thing/event/property/post",
-                        //"/a1yPGkxyv1q/SimuApp/user/update",
-                        //"/a1gZWTRWzGi/P:0001:01/user/update",
-                        fabutopic,
-                       // SetCommandJson(1,26,jsonArray),
-                        Utility.SetCommandJson(Id,Cmd,jsonArray),
-                        0,
-                        false);
+                    fabutopic,
+                    Utility.SetCommandJson(Id,Cmd,jsonArray),
+                    0,
+                    false);
                 Log.e("EditText","发送数据："+SetCommandJson(1,26,jsonArray));
                 new Handler().postDelayed(new Runnable() {
                     @Override

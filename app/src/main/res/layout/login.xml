@@ -6,7 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="#9cd8d9">
+    android:background="@drawable/beijing">
     <RelativeLayout
         android:id="@+id/login_view"
         android:layout_width="400dp"
@@ -51,7 +51,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_alignWithParentIfMissing="false"
-            android:background="#9cd8d9" />
+            />
 
         <EditText
             android:layout_width="400dp"

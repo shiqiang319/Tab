@@ -31,6 +31,8 @@ import java.util.List;
 
 import static com.example.tab.Utility.BtnShow;
 import static com.example.tab.Utility.fabutopic;
+import static com.example.tab.Utility.mynum;
+import static com.example.tab.Utility.username;
 
 public class SecondFragment extends Fragment {
     private SwipeRefreshLayout swipeRefresh;
@@ -100,9 +102,8 @@ public class SecondFragment extends Fragment {
         jiebodai=view.findViewById(R.id.btn_9);
         spin_fajiao=view.findViewById(R.id.spin2);
         spin_juanshe=view.findViewById(R.id.spin3);
-        //Topic
+
         ScanMessage lastmessage= LitePal.findLast(ScanMessage.class);
-        String fabutopic=lastmessage.getFabuTopic().trim();
         //设置发酵罐spinner
         faeduList = new ArrayList<CharSequence>();
         int fanum=Integer.valueOf(lastmessage.getFanum().trim());
@@ -369,11 +370,8 @@ public class SecondFragment extends Fragment {
                 String inputx= spin_fajiao.getSelectedItem().toString();
                 Log.e("手动设置发酵罐：",inputx);
                 Integer x=Integer.parseInt(inputx);
-//                ScanMessage lastmessage= LitePal.findLast(ScanMessage.class);
-//                Integer username=lastmessage.getUserNum();
-//                Integer mynum=lastmessage.getMyNum();
-                Integer Id=1*256+x;
-                Integer Cmd=1*256+112;
+                Integer Id=username*256+x;
+                Integer Cmd=mynum*256+112;
                 JSONArray jsonArray=new JSONArray();
                 int P10=Utility.MySecret(65535,Id);
                 int P11=Utility.MySecret(P10,Cmd);
@@ -381,14 +379,11 @@ public class SecondFragment extends Fragment {
                 jsonArray.put(P1);
                 jsonArray.put(1);
                 MyMqttClient.sharedCenter().setSendData(
-                        //"/sys/a1S917F388O/wenxin/thing/event/property/post",
-                        //"/a1yPGkxyv1q/SimuApp/user/update",
-                        //"/a1S917F388O/P:0001:01/user/update",
-                        fabutopic,
-                       // Utility.CommandJson(x,112,1),
-                        Utility.SetCommandJson(Id,Cmd,jsonArray),
-                        0,
-                        false);
+                    fabutopic,
+                   // Utility.CommandJson(x,112,1),
+                    Utility.SetCommandJson(Id,Cmd,jsonArray),
+                    0,
+                    false);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -398,7 +393,7 @@ public class SecondFragment extends Fragment {
                         if (dataString!=""){
                             Log.e("（手动）发酵罐Spinner返回数据读取",dataString);
                             newdata=Utility.handleDataResponse(dataString);
-                           // showFjgDataInfo(newdata);//刷新界面
+                            showFjgDataInfo(newdata);//刷新界面
                             prefs.edit().clear().commit();//清除SharedPreferences数据
                         }else {
                             Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
@@ -421,11 +416,8 @@ public class SecondFragment extends Fragment {
             public void onClick(View v) {
                 String inputx= spin_fajiao.getSelectedItem().toString();
                 Integer x=Integer.parseInt(inputx);
-//                ScanMessage lastmessage= LitePal.findLast(ScanMessage.class);
-//                Integer username=lastmessage.getUserNum();
-//                Integer mynum=lastmessage.getMyNum();
-                Integer Id=1*256+x;
-                Integer Cmd=1*256+67;
+                Integer Id=username*256+x;
+                Integer Cmd=mynum*256+67;
                 JSONArray jsonArray=new JSONArray();
                 int P10=Utility.MySecret(65535,Id);
                 int P11=Utility.MySecret(P10,Cmd);
@@ -433,14 +425,10 @@ public class SecondFragment extends Fragment {
                 jsonArray.put(P1);
                 jsonArray.put(para);
                 MyMqttClient.sharedCenter().setSendData(
-                        //"/sys/a1S917F388O/wenxin/thing/event/property/post",
-                        //"/a1yPGkxyv1q/SimuApp/user/update",
-                        //"/a1S917F388O/P:0001:01/user/update",
-                        fabutopic,
-                       // Utility.CommandJson(x,67,para),
-                        Utility.SetCommandJson(Id,Cmd,jsonArray),
-                        0,
-                        false);
+                    fabutopic,
+                    Utility.SetCommandJson(Id,Cmd,jsonArray),
+                    0,
+                    false);
                 Log.e("Btn","发酵罐已发送指令"+Utility.SetCommandJson(Id,Cmd,jsonArray));
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -451,7 +439,7 @@ public class SecondFragment extends Fragment {
                         if (dataString!=""){
                             Log.e("发酵罐按钮数据读取",dataString);
                             newdata=Utility.handleDataResponse(dataString);
-                          //  showFjgDataInfo(newdata);//刷新界面
+                            showFjgDataInfo(newdata);//刷新界面
                             prefs.edit().clear().commit();//清除SharedPreferences数据
                         }else {
                             Toast.makeText(getActivity(), "获取数据失败，请先刷新界面或检查设备是否上线！", Toast.LENGTH_SHORT).show();
@@ -474,11 +462,8 @@ public class SecondFragment extends Fragment {
                 String inputx= spin_juanshe.getSelectedItem().toString();
                 Log.e("手动设置圈舍：",inputx);
                 Integer z=Integer.parseInt(inputx);
-//                ScanMessage lastmessage= LitePal.findLast(ScanMessage.class);
-//                Integer username=lastmessage.getUserNum();
-//                Integer mynum=lastmessage.getMyNum();
-                Integer Id=1*256+z+16;
-                Integer Cmd=1*256+112;
+                Integer Id=username*256+z+16;
+                Integer Cmd=mynum*256+112;
                 JSONArray jsonArray=new JSONArray();
                 int P10=Utility.MySecret(65535,Id);
                 int P11=Utility.MySecret(P10,Cmd);
@@ -486,14 +471,10 @@ public class SecondFragment extends Fragment {
                 jsonArray.put(P1);
                 jsonArray.put(1);
                 MyMqttClient.sharedCenter().setSendData(
-                        //"/sys/a1S917F388O/wenxin/thing/event/property/post",
-                       // "/a1yPGkxyv1q/SimuApp/user/update",
-                        //"/a1S917F388O/P:0001:01/user/update",
-                        fabutopic,
-                       // Utility.CommandJson(z+16,112,1),
-                        Utility.SetCommandJson(Id,Cmd,jsonArray),
-                        0,
-                        false);
+                    fabutopic,
+                    Utility.SetCommandJson(Id,Cmd,jsonArray),
+                    0,
+                    false);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -527,11 +508,8 @@ public class SecondFragment extends Fragment {
             public void onClick(View v) {
                 final String inputz= spin_juanshe.getSelectedItem().toString();
                 Integer z=Integer.parseInt(inputz);
-//                ScanMessage lastmessage= LitePal.findLast(ScanMessage.class);
-//                Integer username=lastmessage.getUserNum();
-//                Integer mynum=lastmessage.getMyNum();
-                Integer Id=1*256+z+16;
-                Integer Cmd=1*256+67;
+                Integer Id=username*256+z+16;
+                Integer Cmd=mynum*256+67;
                 JSONArray jsonArray=new JSONArray();
                 int P10=Utility.MySecret(65535,Id);
                 int P11=Utility.MySecret(P10,Cmd);
@@ -539,14 +517,10 @@ public class SecondFragment extends Fragment {
                 jsonArray.put(P1);
                 jsonArray.put(para);
                 MyMqttClient.sharedCenter().setSendData(
-                        //"/sys/a1S917F388O/wenxin/thing/event/property/post",
-                       // "/a1yPGkxyv1q/SimuApp/user/update",
-                       // "/a1S917F388O/P:0001:01/user/update",
-                        fabutopic,
-                       // Utility.CommandJson(z+16,67,para),
-                        Utility.SetCommandJson(Id,Cmd,jsonArray),
-                        0,
-                        false);
+                    fabutopic,
+                    Utility.SetCommandJson(Id,Cmd,jsonArray),
+                    0,
+                    false);
                 Log.e("Btn","圈舍已发送指令"+ Utility.SetCommandJson(Id,Cmd,jsonArray));
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -557,7 +531,7 @@ public class SecondFragment extends Fragment {
                         if (dataString!=""){
                             Log.e("圈舍按钮数据读取",dataString);
                             newdata=Utility.handleDataResponse(dataString);
-                         //   showJsDataInfo(newdata);//刷新界面
+                            showJsDataInfo(newdata);//刷新界面
                             prefs.edit().clear().commit();//清除SharedPreferences数据
                         }else {
                             Toast.makeText(getActivity(), "获取数据失败，请先刷新界面或检查设备是否上线！", Toast.LENGTH_SHORT).show();
@@ -572,11 +546,8 @@ public class SecondFragment extends Fragment {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                ScanMessage lastmessage= LitePal.findLast(ScanMessage.class);
-//                Integer username=lastmessage.getUserNum();
-//                Integer mynum=lastmessage.getMyNum();
-                Integer Id=1*256+1;
-                Integer Cmd=1*256+67;
+                Integer Id=username*256+1;
+                Integer Cmd=mynum*256+67;
                 JSONArray jsonArray=new JSONArray();
                 int P10=Utility.MySecret(65535,Id);
                 int P11=Utility.MySecret(P10,Cmd);
@@ -584,11 +555,7 @@ public class SecondFragment extends Fragment {
                 jsonArray.put(P1);
                 jsonArray.put(13);
                 MyMqttClient.sharedCenter().setSendData(
-                //"/sys/a1S917F388O/wenxin/thing/event/property/post",
-                //"/a1yPGkxyv1q/SimuApp/user/update",
-                //"/a1gZWTRWzGi/P:0001:01/user/update",
                 fabutopic,
-                //"{\"method\":\"thing.event.property.post\",\"id\":\"1111\",\"params\":{\"Id\":1,\"Cmd\":67,\"Para\":[13]},\"version\":\"1.0.0\"}",
                 Utility.SetCommandJson(Id,Cmd,jsonArray),
                 0,
                 false);

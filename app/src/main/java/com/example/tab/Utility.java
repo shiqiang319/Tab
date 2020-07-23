@@ -19,8 +19,11 @@ import javax.crypto.spec.SecretKeySpec;
 
 
 public class Utility {
-     static ScanMessage lastmessage= LitePal.findLast(ScanMessage.class);
-     static String fabutopic=lastmessage.getFabuTopic().trim();
+
+    static ScanMessage lastmessage= LitePal.findLast(ScanMessage.class);
+    static String fabutopic=lastmessage.getFabuTopic().trim();
+    static Integer username=lastmessage.getUserNum();
+    static Integer mynum=lastmessage.getMyNum();
 
     public static Data handleDataResponse(String response){
         try{
@@ -32,18 +35,8 @@ public class Utility {
         return null;
     }
     public static  void requestData(){
-//        MyMqttClient.sharedCenter().setSendData(
-//                //"/sys/a1S917F388O/wenxin/thing/event/property/post",
-//                //"/a1yPGkxyv1q/SimuApp/user/update",
-//                "/a1gZWTRWzGi/P:0001:01/user/update",
-//                "{\"method\":\"thing.event.property.post\",\"id\":\"1111\",\"params\":{\"Id\":1,\"Cmd\":112,\"Para\":[1]},\"version\":\"1.0.0\"}",
-//                0,
-//                false);
-//                ScanMessage lastmessage= LitePal.findLast(ScanMessage.class);
-//                Integer username=lastmessage.getUserNum();
-//                Integer mynum=lastmessage.getMyNum();
-        Integer Id=1*256+1;
-        Integer Cmd=1*256+112;
+        Integer Id=username*256+1;
+        Integer Cmd=mynum*256+112;
         JSONArray jsonArray=new JSONArray();
         int P10=Utility.MySecret(65535,Id);
         int P11=Utility.MySecret(P10,Cmd);
@@ -51,10 +44,8 @@ public class Utility {
         jsonArray.put(P1);
         jsonArray.put(1);
         MyMqttClient.sharedCenter().setSendData(
-                //"/sys/a1S917F388O/wenxin/thing/event/property/post",
                 //"/a1yPGkxyv1q/SimuApp/user/update",
                 fabutopic,
-               // "/a1S917F388O/P:0001:01/user/update",
                 //"{\"method\":\"thing.event.property.post\",\"id\":\"1111\",\"params\":{\"Id\":1,\"Cmd\":112,\"Para\":[1]},\"version\":\"1.0.0\"}",
                 Utility.SetCommandJson(Id,Cmd,jsonArray),
                 0,
@@ -62,15 +53,8 @@ public class Utility {
         Log.e("下拉刷新","已发送查询指令:"+ Utility.SetCommandJson(Id,Cmd,jsonArray));
     }
     public static  void szrequestData(){
-//        MyMqttClient.sharedCenter().setSendData(
-//                //"/sys/a1S917F388O/wenxin/thing/event/property/post",
-//                //"/a1yPGkxyv1q/SimuApp/user/update",
-//                "/a1gZWTRWzGi/P:0001:01/user/update",
-//                "{\"method\":\"thing.event.property.post\",\"id\":\"1111\",\"params\":{\"Id\":1,\"Cmd\":43,\"Para\":[1]},\"version\":\"1.0.0\"}",
-//                0,
-//                false);
-        Integer Id=1*256+1;
-        Integer Cmd=1*256+43;
+        Integer Id=username*256+1;
+        Integer Cmd=mynum*256+43;
         JSONArray jsonArray=new JSONArray();
         int P10=Utility.MySecret(65535,Id);
         int P11=Utility.MySecret(P10,Cmd);
@@ -78,11 +62,7 @@ public class Utility {
         jsonArray.put(P1);
         jsonArray.put(1);
         MyMqttClient.sharedCenter().setSendData(
-                //"/sys/a1S917F388O/wenxin/thing/event/property/post",
-                //"/a1yPGkxyv1q/SimuApp/user/update",
                 fabutopic,
-                //"/a1S917F388O/P:0001:01/user/update",
-                //"{\"method\":\"thing.event.property.post\",\"id\":\"1111\",\"params\":{\"Id\":1,\"Cmd\":112,\"Para\":[1]},\"version\":\"1.0.0\"}",
                 Utility.SetCommandJson(Id,Cmd,jsonArray),
                 0,
                 false);
@@ -90,15 +70,8 @@ public class Utility {
 
     }
     public static  void xtrequestData(){
-//        MyMqttClient.sharedCenter().setSendData(
-//                //"/sys/a1S917F388O/wenxin/thing/event/property/post",
-//                //"/a1yPGkxyv1q/SimuApp/user/update",
-//                "/a1gZWTRWzGi/P:0001:01/user/update",
-//                "{\"method\":\"thing.event.property.post\",\"id\":\"1111\",\"params\":{\"Id\":1,\"Cmd\":42,\"Para\":[1]},\"version\":\"1.0.0\"}",
-//                0,
-//                false);
-        Integer Id=1*256+1;
-        Integer Cmd=1*256+42;
+        Integer Id=username*256+1;
+        Integer Cmd=mynum*256+42;
         JSONArray jsonArray=new JSONArray();
         int P10=Utility.MySecret(65535,Id);
         int P11=Utility.MySecret(P10,Cmd);
@@ -106,14 +79,10 @@ public class Utility {
         jsonArray.put(P1);
         jsonArray.put(1);
         MyMqttClient.sharedCenter().setSendData(
-                //"/sys/a1S917F388O/wenxin/thing/event/property/post",
-                //"/a1yPGkxyv1q/SimuApp/user/update",
-                fabutopic,
-                //"/a1gZWTRWzGi/P:0001:01/user/update",
-                //"{\"method\":\"thing.event.property.post\",\"id\":\"1111\",\"params\":{\"Id\":1,\"Cmd\":112,\"Para\":[1]},\"version\":\"1.0.0\"}",
-                Utility.SetCommandJson(Id,Cmd,jsonArray),
-                0,
-                false);
+            fabutopic,
+            Utility.SetCommandJson(Id,Cmd,jsonArray),
+            0,
+            false);
         Log.e("下拉刷新","已发送查询指令:"+ Utility.SetCommandJson(Id,Cmd,jsonArray));
     }
     public static void BtnShow(final Button btn, final String BtnMsg, final String color){
@@ -145,7 +114,7 @@ public class Utility {
 
         return jsonObject.toString();
     }
-    //设置/系统界面构建指令报文
+    //构建指令报文
     public static String SetCommandJson(Integer id,Integer cmd,JSONArray jsonArray){
         //创建JSON
         JSONObject jsonObject = new JSONObject();
@@ -206,4 +175,5 @@ public class Utility {
         }
         return(Start);
     }
+
 }

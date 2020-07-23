@@ -30,6 +30,8 @@ import java.util.List;
 
 import static com.example.tab.Utility.BtnBgShowColor;
 import static com.example.tab.Utility.fabutopic;
+import static com.example.tab.Utility.mynum;
+import static com.example.tab.Utility.username;
 
 public class ThirtlyFragment extends Fragment {
     private SwipeRefreshLayout swipeRefresh;
@@ -109,9 +111,8 @@ public class ThirtlyFragment extends Fragment {
         chanliang=view.findViewById(R.id.tv_chanliang);
         zhuangtai=view.findViewById(R.id.tv_zhuangtai);
         cuowu=view.findViewById(R.id.tv_cuowu);
-        //Topic
+
         ScanMessage lastmessage= LitePal.findLast(ScanMessage.class);
-        String fabutopic=lastmessage.getFabuTopic().trim();
         //设置发酵罐spinner
         faeduList = new ArrayList<CharSequence>();
         int fanum=Integer.valueOf(lastmessage.getFanum().trim());
@@ -314,11 +315,8 @@ public class ThirtlyFragment extends Fragment {
                 String inputx= spin_fjg.getSelectedItem().toString();
                 Log.e("状态-设置发酵罐：",inputx);
                 Integer x=Integer.parseInt(inputx);
-//                ScanMessage lastmessage= LitePal.findLast(ScanMessage.class);
-//                Integer username=lastmessage.getUserNum();
-//                Integer mynum=lastmessage.getMyNum();
-                Integer Id=1*256+x;
-                Integer Cmd=1*256+112;
+                Integer Id=username*256+x;
+                Integer Cmd=mynum*256+112;
                 JSONArray jsonArray=new JSONArray();
                 int P10=Utility.MySecret(65535,Id);
                 int P11=Utility.MySecret(P10,Cmd);
@@ -326,14 +324,10 @@ public class ThirtlyFragment extends Fragment {
                 jsonArray.put(P1);
                 jsonArray.put(1);
                 MyMqttClient.sharedCenter().setSendData(
-                        //"/sys/a1S917F388O/wenxin/thing/event/property/post",
-                        //"/a1yPGkxyv1q/SimuApp/user/update",
-                        //"/a1S917F388O/P:0001:01/user/update",
-                        fabutopic,
-                       // Utility.CommandJson(x,112,1),
-                        Utility.SetCommandJson(Id,Cmd,jsonArray),
-                        0,
-                        false);
+                    fabutopic,
+                    Utility.SetCommandJson(Id,Cmd,jsonArray),
+                    0,
+                    false);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -373,11 +367,8 @@ public class ThirtlyFragment extends Fragment {
                 String inputx= spin_js.getSelectedItem().toString();
                 Log.e("状态-设置圈舍：",inputx);
                 Integer z=Integer.parseInt(inputx);
-//                ScanMessage lastmessage= LitePal.findLast(ScanMessage.class);
-//                Integer username=lastmessage.getUserNum();
-//                Integer mynum=lastmessage.getMyNum();
-                Integer Id=1*256+z+16;
-                Integer Cmd=1*256+112;
+                Integer Id=username*256+z+16;
+                Integer Cmd=mynum*256+112;
                 JSONArray jsonArray=new JSONArray();
                 int P10=Utility.MySecret(65535,Id);
                 int P11=Utility.MySecret(P10,Cmd);
@@ -385,14 +376,10 @@ public class ThirtlyFragment extends Fragment {
                 jsonArray.put(P1);
                 jsonArray.put(1);
                 MyMqttClient.sharedCenter().setSendData(
-                        //"/sys/a1S917F388O/wenxin/thing/event/property/post",
-                       //"/a1yPGkxyv1q/SimuApp/user/update",
-                       // "/a1S917F388O/P:0001:01/user/update",
-                        fabutopic,
-                       // Utility.CommandJson(z+16,112,1),
-                        Utility.SetCommandJson(Id,Cmd,jsonArray),
-                        0,
-                        false);
+                    fabutopic,
+                    Utility.SetCommandJson(Id,Cmd,jsonArray),
+                    0,
+                    false);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
