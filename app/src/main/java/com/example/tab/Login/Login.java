@@ -147,6 +147,11 @@ public class Login extends Activity implements OnClickListener{                 
                 builder.setPositiveButton("确定", new DialogInterface.OnClickListener() { //设置确定按钮
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        //清除以前注册的信息
+                        LitePal.deleteAll(ScanMessage.class);
+                        login_sp.edit().clear().commit();
+                        mUserDataManager.deleteAllUserDatas();
+
                         String userName = scanResult[0].trim();
                         String userPwd = scanResult[1].trim();
                         Log.e("账户",scanResult[0]);
@@ -154,10 +159,10 @@ public class Login extends Activity implements OnClickListener{                 
                         //检查用户是否存在
                         int count=mUserDataManager.findUserByName(userName);
                         //用户已经存在时返回，给出提示文字
-                        if(count>0){
-                            Toast.makeText(Login.this, getString(R.string.name_already_exist, userName),Toast.LENGTH_SHORT).show();
+                       if(count>0){
+                           Toast.makeText(Login.this, getString(R.string.name_already_exist, userName),Toast.LENGTH_SHORT).show();
                             return ;
-                        } else {
+                        }else {
                             UserData mUser = new UserData(userName, userPwd);
                             mUserDataManager.openDataBase();
                             long flag = mUserDataManager.insertUserData(mUser); //新建用户信息
@@ -199,7 +204,8 @@ public class Login extends Activity implements OnClickListener{                 
                                 mPwd.setText(userPwd);
 
                             }
-                        }
+
+                             }
 
                     }
                 });
@@ -287,7 +293,7 @@ public class Login extends Activity implements OnClickListener{                 
                 ScanMessage lastmessage=LitePal.findLast(ScanMessage.class);
                 MyMqttClient.sharedCenter().setClientId(lastmessage.getDeviceNam()+"|securemode=3,signmethod=hmacsha1|");
                 MyMqttClient.sharedCenter().setMqttUserString(lastmessage.getDeviceNam()+"&"+lastmessage.getProductKey());
-                MyMqttClient.sharedCenter().setMqttIPString(lastmessage.getProductKey()+".iot-as-mqtt.cn-shanghai.aliyuncs.com:1883");
+                MyMqttClient.sharedCenter().setMqttIPString(lastmessage.getProductKey()+".iot-as-mqtt.cn-shanghai.aliyuncs.com");
                 String Content="clientId"+lastmessage.getDeviceNam()+"deviceName"+lastmessage.getDeviceNam()+"productKey"+lastmessage.getProductKey();
                 String MqttPwdString = null;
                 try {
@@ -316,6 +322,7 @@ public class Login extends Activity implements OnClickListener{                 
 
             String userName = mAccount.getText().toString().trim();    //获取当前输入的用户名和密码信息
             String userPwd = mPwd.getText().toString().trim();
+            Log.e("cancle"," userName:"+ userName);
             int result=mUserDataManager.findUserByNameAndPwd(userName, userPwd);
             if(result==1){                                             //返回1说明用户名和密码均正确
 //                Intent intent = new Intent(Login.this,User.class) ;    //切换Login Activity至User Activity
@@ -323,7 +330,8 @@ public class Login extends Activity implements OnClickListener{                 
                 Toast.makeText(this, getString(R.string.cancel_success),Toast.LENGTH_SHORT).show();//登录成功提示
                 mPwd.setText("");
                 mAccount.setText("");
-                mUserDataManager.deleteUserDatabyname(userName);
+                //mUserDataManager.deleteUserDatabyname(userName);
+                mUserDataManager.deleteAllUserDatas();
             }else if(result==0){
                 Toast.makeText(this, getString(R.string.cancel_fail),Toast.LENGTH_SHORT).show();  //登录失败提示
             }

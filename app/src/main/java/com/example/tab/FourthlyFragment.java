@@ -116,7 +116,27 @@ public class FourthlyFragment extends Fragment {
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Utility.szrequestData();//发送请求
+               // Utility.szrequestData();//发送请求
+                String inputx= spinner.getSelectedItem().toString();
+                Integer x=Integer.parseInt(inputx);
+                Integer Id=username*256+x;
+                Integer Cmd=mynum*256+43;
+                if (x==0){
+                    swipeRefresh.setRefreshing(false);
+                    return;
+                }
+                JSONArray jsonArray=new JSONArray();
+                int P10=Utility.MySecret(65535,Id);
+                int P11=Utility.MySecret(P10,Cmd);
+                int P1=Utility.MySecret(P11,1);
+                jsonArray.put(P1);
+                jsonArray.put(1);
+                MyMqttClient.sharedCenter().setSendData(
+                        fabutopic,
+                        Utility.SetCommandJson(Id,Cmd,jsonArray),
+                        0,
+                        false);
+                Log.e("下拉刷新","已发送查询指令:"+ Utility.SetCommandJson(Id,Cmd,jsonArray));
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -129,11 +149,26 @@ public class FourthlyFragment extends Fragment {
                             showDataInfo(newdata);
                             prefs.edit().clear().commit();//清除SharedPreferences数据
                         }else {
-                            Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //从SharedPreferences读取数据
+                                    prefs=getActivity().getSharedPreferences("datastore",0);
+                                    dataString=prefs.getString("data","");
+                                    if (dataString!="") {
+                                        Log.e("刷新延时数据读取", dataString);
+                                        newdata = Utility.handleDataResponse(dataString);
+                                        showDataInfo(newdata);
+                                        prefs.edit().clear().commit();//清除SharedPreferences数据
+                                    }else {
+                                        Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            },1000);
                         }
                         swipeRefresh.setRefreshing(false);
                     }
-                },500);
+                },1000);
 
             }
         });
@@ -147,7 +182,7 @@ public class FourthlyFragment extends Fragment {
     }
     //展示Data实体类中的数据
     private void showDataInfo(Data newdata){
-        spinner.setSelection(newdata.Id%256);
+        spinner.setSelection(Integer.parseInt(newdata.Cmd)/256);
         wdsx.setText(newdata.Para.get(3).toString());
         wdxx.setText(newdata.Para.get(4).toString());
         fwsx.setText(newdata.Para.get(5).toString());
@@ -225,11 +260,26 @@ public class FourthlyFragment extends Fragment {
                              showDataInfo(newdata);//刷新界面
                             prefs.edit().clear().commit();//清除SharedPreferences数据
                         }else {
-                            Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //从SharedPreferences读取数据
+                                    prefs=getActivity().getSharedPreferences("datastore",0);
+                                    String dataString=prefs.getString("data","");
+                                    if (dataString!="") {
+                                        Log.e("刷新延时数据读取", dataString);
+                                        newdata = Utility.handleDataResponse(dataString);
+                                        showDataInfo(newdata);
+                                        prefs.edit().clear().commit();//清除SharedPreferences数据
+                                    }else {
+                                        Toast.makeText(getActivity(), "获取数据失败，请刷新界面并确保设备已上线！", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            },1000);
                         }
 
                     }
-                },500);
+                },1000);
             }
 
             @Override
@@ -294,7 +344,7 @@ public class FourthlyFragment extends Fragment {
                 ||TextUtils.isEmpty(jzxz.getText())||TextUtils.isEmpty(jbxs.getText())||TextUtils.isEmpty(slxs.getText())
                 ||TextUtils.isEmpty(xlxs.getText())||TextUtils.isEmpty(flxs.getText())||TextUtils.isEmpty(jzxs.getText())
                 ||TextUtils.isEmpty(kjxs.getText())||TextUtils.isEmpty(ydgj.getText())||TextUtils.isEmpty(ydkj.getText())
-                ||TextUtils.isEmpty(edgj.getText())||TextUtils.isEmpty(edkj.getText())||(P1==0)){
+                ||TextUtils.isEmpty(edgj.getText())||TextUtils.isEmpty(edkj.getText())){
                     Toast.makeText(getActivity(), "有参数未设置，参数配置失败！" , Toast.LENGTH_SHORT).show();
                     return;
 
@@ -377,10 +427,25 @@ public class FourthlyFragment extends Fragment {
                             showDataInfo(newdata);//刷新界面
                             prefs.edit().clear().commit();//清除SharedPreferences数据
                         }else {
-                            Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //从SharedPreferences读取数据
+                                    prefs=getActivity().getSharedPreferences("datastore",0);
+                                    String dataString=prefs.getString("data","");
+                                    if (dataString!="") {
+                                        Log.e("刷新延时数据读取", dataString);
+                                        newdata = Utility.handleDataResponse(dataString);
+                                        showDataInfo(newdata);
+                                        prefs.edit().clear().commit();//清除SharedPreferences数据
+                                    }else {
+                                        Toast.makeText(getActivity(), "当前网络不佳，请刷新界面！", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            },1000);
                         }
                     }
-                },500);
+                },1000);
             }
         });
     }

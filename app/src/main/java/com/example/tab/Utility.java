@@ -1,9 +1,12 @@
 package com.example.tab;
 
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.tab.Login.ScanMessage;
 import com.google.gson.Gson;
@@ -24,6 +27,7 @@ public class Utility {
     static String fabutopic=lastmessage.getFabuTopic().trim();
     static Integer username=lastmessage.getUserNum();
     static Integer mynum=lastmessage.getMyNum();
+    static SharedPreferences prefs;
 
     public static Data handleDataResponse(String response){
         try{
@@ -35,7 +39,7 @@ public class Utility {
         return null;
     }
     public static  void requestData(){
-        Integer Id=username*256+1;
+        Integer Id=username*256+2;
         Integer Cmd=mynum*256+112;
         JSONArray jsonArray=new JSONArray();
         int P10=Utility.MySecret(65535,Id);

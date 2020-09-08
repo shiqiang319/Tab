@@ -93,7 +93,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="9dp"
-                android:text="/小时"
+                android:text="/hour"
                 android:textColor="#000000"
                 android:textSize="20sp"
                 android:layout_marginLeft="170dp"/>
@@ -124,7 +124,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="9dp"
-                android:text="/分钟"
+                android:text="/min"
                 android:textColor="#000000"
                 android:textSize="20sp"
                 android:layout_marginLeft="170dp"/>
@@ -155,7 +155,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="9dp"
-                android:text="/分钟"
+                android:text="/s"
                 android:textColor="#000000"
                 android:textSize="20sp"
                 android:layout_marginLeft="170dp"/>
@@ -186,7 +186,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="9dp"
-                android:text="/分钟"
+                android:text="/min"
                 android:textColor="#000000"
                 android:textSize="20sp"
                 android:layout_marginLeft="170dp"/>

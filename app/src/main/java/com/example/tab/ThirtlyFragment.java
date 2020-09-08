@@ -63,6 +63,8 @@ public class ThirtlyFragment extends Fragment {
     private Button O14;
     private Button O15;
     private Button O16;
+    private TextView tv1;
+    private TextView tv2;
     private TextView chengzhong;
     private TextView chanliang;
     private TextView zhuangtai;
@@ -107,6 +109,8 @@ public class ThirtlyFragment extends Fragment {
         O14=view.findViewById(R.id.btn014);
         O15=view.findViewById(R.id.btn015);
         O16=view.findViewById(R.id.btn016);
+        tv1=view.findViewById(R.id.tv_1);
+        tv2=view.findViewById(R.id.tv_2);
         chengzhong=view.findViewById(R.id.tv_chengzhong);
         chanliang=view.findViewById(R.id.tv_chanliang);
         zhuangtai=view.findViewById(R.id.tv_zhuangtai);
@@ -149,11 +153,26 @@ public class ThirtlyFragment extends Fragment {
                             showDataInfo(newdata);
                             prefs.edit().clear().commit();//清除SharedPreferences数据
                         }else {
-                            Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //从SharedPreferences读取数据
+                                    prefs=getActivity().getSharedPreferences("datastore",0);
+                                    dataString=prefs.getString("data","");
+                                    if (dataString!="") {
+                                        Log.e("刷新延时数据读取", dataString);
+                                        newdata = Utility.handleDataResponse(dataString);
+                                        showDataInfo(newdata);
+                                        prefs.edit().clear().commit();//清除SharedPreferences数据
+                                    }else {
+                                        Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            },1000);
                         }
                         swipeRefresh.setRefreshing(false);
                     }
-                },500);
+                },1000);
             }
         });
         //发酵罐控制
@@ -167,18 +186,25 @@ public class ThirtlyFragment extends Fragment {
         //if (newdata.Id<=12){
 //        ScanMessage lastmessage= LitePal.findLast(ScanMessage.class);
 //        Integer username=lastmessage.getUserNum();
-        if (newdata.Id<=(12+256)){
-            spin_fjg.setSelection(newdata.Id%256);
+        if (Integer.parseInt(newdata.Cmd)/256<16){
+            spin_fjg.setSelection(Integer.parseInt(newdata.Cmd)/256);
             spin_js.setSelection(0);
+            tv1.setText("称重");
+            tv2.setText("产量");
+            chengzhong.setText(newdata.Para.get(8).toString());
+            chanliang.setText(newdata.Para.get(12).toString());
+            cuowu.setText(newdata.Para.get(10).toString());
         }else {
             spin_fjg.setSelection(0);
-            spin_js.setSelection((newdata.Id-16)%256);
+            spin_js.setSelection(Integer.parseInt(newdata.Cmd)/256-16);
+            tv1.setText("温度");
+            tv2.setText("湿度");
+            chengzhong.setText(newdata.Para.get(6).toString());
+            chanliang.setText(newdata.Para.get(3).toString());
+            cuowu.setText(newdata.Para.get(2).toString());
         }
         //刷新TextView
-        chengzhong.setText(newdata.Para.get(8).toString());
-        chanliang.setText(newdata.Para.get(12).toString());
         zhuangtai.setText(newdata.Para.get(1).toString());
-        cuowu.setText(newdata.Para.get(10).toString());
         //刷新Button
         if ((newdata.Para.get(5) & 1)==1){
             BtnBgShowColor(O1,"#FF0000");
@@ -340,11 +366,26 @@ public class ThirtlyFragment extends Fragment {
                             showDataInfo(newdata);//刷新界面
                             prefs.edit().clear().commit();//清除SharedPreferences数据
                         }else {
-                            Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //从SharedPreferences读取数据
+                                    prefs=getActivity().getSharedPreferences("datastore",0);
+                                    String dataString=prefs.getString("data","");
+                                    if (dataString!="") {
+                                        Log.e("刷新延时数据读取", dataString);
+                                        newdata = Utility.handleDataResponse(dataString);
+                                        showDataInfo(newdata);
+                                        prefs.edit().clear().commit();//清除SharedPreferences数据
+                                    }else {
+                                        Toast.makeText(getActivity(), "获取数据失败，请刷新界面并确保设备已上线！", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            },1000);
                         }
 
                     }
-                },500);
+                },1000);
             }
 
             @Override
@@ -392,11 +433,26 @@ public class ThirtlyFragment extends Fragment {
                             showDataInfo(newdata);//刷新界面
                             prefs.edit().clear().commit();//清除SharedPreferences数据
                         }else {
-                            Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //从SharedPreferences读取数据
+                                    prefs=getActivity().getSharedPreferences("datastore",0);
+                                    String dataString=prefs.getString("data","");
+                                    if (dataString!="") {
+                                        Log.e("刷新延时数据读取", dataString);
+                                        newdata = Utility.handleDataResponse(dataString);
+                                        showDataInfo(newdata);
+                                        prefs.edit().clear().commit();//清除SharedPreferences数据
+                                    }else {
+                                        Toast.makeText(getActivity(), "获取数据失败，请刷新界面并确保设备已上线！", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            },1000);
                         }
 
                     }
-                },500);
+                },1000);
             }
 
             @Override

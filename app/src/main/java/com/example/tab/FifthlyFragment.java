@@ -87,11 +87,26 @@ public class FifthlyFragment extends Fragment {
                             showDataInfo(newdata);
                             prefs.edit().clear().commit();//清除SharedPreferences数据
                         }else {
-                            Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //从SharedPreferences读取数据
+                                    prefs=getActivity().getSharedPreferences("datastore",0);
+                                    dataString=prefs.getString("data","");
+                                    if (dataString!="") {
+                                        Log.e("刷新延时数据读取", dataString);
+                                        newdata = Utility.handleDataResponse(dataString);
+                                        showDataInfo(newdata);
+                                        prefs.edit().clear().commit();//清除SharedPreferences数据
+                                    }else {
+                                        Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            },1000);
                         }
                         swipeRefresh.setRefreshing(false);
                     }
-                },500);
+                },1000);
             }
         });
         //使用授权为不可编辑
@@ -165,7 +180,6 @@ public class FifthlyFragment extends Fragment {
                 int P0=Utility.MySecret(C10,P10);
                 jsonArray.put(P0);
                 jsonArray.put(P1);
-                jsonArray.put(P1);
                 jsonArray.put(P2);
                 jsonArray.put(P3);
                 jsonArray.put(P4);
@@ -193,11 +207,26 @@ public class FifthlyFragment extends Fragment {
                             showDataInfo(newdata);//刷新界面
                             prefs.edit().clear().commit();//清除SharedPreferences数据
                         }else {
-                            Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //从SharedPreferences读取数据
+                                    prefs=getActivity().getSharedPreferences("datastore",0);
+                                    String dataString=prefs.getString("data","");
+                                    if (dataString!="") {
+                                        Log.e("刷新延时数据读取", dataString);
+                                        newdata = Utility.handleDataResponse(dataString);
+                                        showDataInfo(newdata);
+                                        prefs.edit().clear().commit();//清除SharedPreferences数据
+                                    }else {
+                                        Toast.makeText(getActivity(), "当前网络不佳，请刷新界面！", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            },1000);
                         }
 
                     }
-                },500);
+                },1000);
             }
         });
     }

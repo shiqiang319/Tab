@@ -36,6 +36,7 @@ import static com.example.tab.Utility.username;
 
 public class SecondFragment extends Fragment {
     private SwipeRefreshLayout swipeRefresh;
+    private SwipeRefreshLayout swipe_juanshe;
     private SharedPreferences prefs;
     private Data newdata;
     private Button jiaoban;
@@ -59,9 +60,9 @@ public class SecondFragment extends Fragment {
     private Button qingwu4;
     private Button qingwu5;
     private Button qingwu6;
-    private Button qingwu7;
+    private Button shusongdai;
     private Button qingwu8;
-    private Button jiebodai;
+    private Button chuliaodai;
     private Spinner spin_fajiao;
     private Spinner spin_juanshe;
     private String dataString;
@@ -76,6 +77,7 @@ public class SecondFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_second, null);
         swipeRefresh=view.findViewById(R.id.swipe_refresh2);
+        swipe_juanshe=view.findViewById(R.id.swipe_juanshe);
         jiaoban=view.findViewById(R.id.btn_jiaobanguan);
         paosui=view.findViewById(R.id.btn_posuiguan);
         xieliao=view.findViewById(R.id.btn_xieliaoguan);
@@ -97,9 +99,9 @@ public class SecondFragment extends Fragment {
         qingwu4=view.findViewById(R.id.btn_4);
         qingwu5=view.findViewById(R.id.btn_5);
         qingwu6=view.findViewById(R.id.btn_6);
-        qingwu7=view.findViewById(R.id.btn_7);
+        shusongdai=view.findViewById(R.id.btn_7);
         qingwu8=view.findViewById(R.id.btn_8);
-        jiebodai=view.findViewById(R.id.btn_9);
+        chuliaodai=view.findViewById(R.id.btn_9);
         spin_fajiao=view.findViewById(R.id.spin2);
         spin_juanshe=view.findViewById(R.id.spin3);
 
@@ -123,12 +125,32 @@ public class SecondFragment extends Fragment {
         juaneduAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spin_juanshe.setAdapter(juaneduAdapter);
 
-        //下拉刷新
+        //发酵罐下拉刷新
         swipeRefresh.setColorSchemeColors(R.color.colorPrimary);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-               Utility.requestData();//发送请求
+              // Utility.requestData();//发送请求
+                String inputx= spin_fajiao.getSelectedItem().toString();
+                Integer x=Integer.parseInt(inputx);
+                if (x==0){
+                    swipeRefresh.setRefreshing(false);
+                    return;
+                }
+                Integer Id=username*256+x;
+                Integer Cmd=mynum*256+112;
+                JSONArray jsonArray=new JSONArray();
+                int P10=Utility.MySecret(65535,Id);
+                int P11=Utility.MySecret(P10,Cmd);
+                int P1=Utility.MySecret(P11,1);
+                jsonArray.put(P1);
+                jsonArray.put(1);
+                MyMqttClient.sharedCenter().setSendData(
+                        fabutopic,
+                        Utility.SetCommandJson(Id,Cmd,jsonArray),
+                        0,
+                        false);
+                Log.e("下拉刷新","已发送查询指令:"+ Utility.SetCommandJson(Id,Cmd,jsonArray));
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -141,11 +163,88 @@ public class SecondFragment extends Fragment {
                             showFjgDataInfo(newdata);
                             prefs.edit().clear().commit();//清除SharedPreferences数据
                         }else {
-                            Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                           // Toast.makeText(getActivity(), "延时1秒", Toast.LENGTH_SHORT).show();
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //从SharedPreferences读取数据
+                                    prefs=getActivity().getSharedPreferences("datastore",0);
+                                    dataString=prefs.getString("data","");
+                                    if (dataString!="") {
+                                        Log.e("刷新延时数据读取", dataString);
+                                        newdata = Utility.handleDataResponse(dataString);
+                                        showFjgDataInfo(newdata);
+                                        prefs.edit().clear().commit();//清除SharedPreferences数据
+                                    }else {
+                                        Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            },1000);
                         }
                         swipeRefresh.setRefreshing(false);
                     }
-                },500);
+                },1000);
+            }
+        });
+        //圈舍下拉刷新
+        swipe_juanshe.setColorSchemeColors(R.color.colorPrimary);
+        swipe_juanshe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Utility.requestData();//发送请求
+                String inputx= spin_juanshe.getSelectedItem().toString();
+                Integer z=Integer.parseInt(inputx);
+                if (z==0){
+                    swipe_juanshe.setRefreshing(false);
+                    return;
+                }
+                Integer Id=username*256+z+16;
+                Integer Cmd=mynum*256+112;
+                JSONArray jsonArray=new JSONArray();
+                int P10=Utility.MySecret(65535,Id);
+                int P11=Utility.MySecret(P10,Cmd);
+                int P1=Utility.MySecret(P11,1);
+                jsonArray.put(P1);
+                jsonArray.put(1);
+                MyMqttClient.sharedCenter().setSendData(
+                        fabutopic,
+                        Utility.SetCommandJson(Id,Cmd,jsonArray),
+                        0,
+                        false);
+                Log.e("下拉刷新","已发送查询指令:"+ Utility.SetCommandJson(Id,Cmd,jsonArray));
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //从SharedPreferences读取数据
+                        prefs=getActivity().getSharedPreferences("datastore",0);
+                        dataString=prefs.getString("data","");
+                        if (dataString!=""){
+                            Log.e("手动数据读取",dataString);
+                            newdata=Utility.handleDataResponse(dataString);
+                            showJsDataInfo(newdata);
+                            prefs.edit().clear().commit();//清除SharedPreferences数据
+                        }else {
+                            // Toast.makeText(getActivity(), "延时1秒", Toast.LENGTH_SHORT).show();
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //从SharedPreferences读取数据
+                                    prefs=getActivity().getSharedPreferences("datastore",0);
+                                    dataString=prefs.getString("data","");
+                                    if (dataString!="") {
+                                        Log.e("刷新延时数据读取", dataString);
+                                        newdata = Utility.handleDataResponse(dataString);
+                                        showJsDataInfo(newdata);
+                                        prefs.edit().clear().commit();//清除SharedPreferences数据
+                                    }else {
+                                        Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            },1000);
+                        }
+                        swipe_juanshe.setRefreshing(false);
+                    }
+                },1000);
             }
         });
         //发酵罐控制部分按钮点击
@@ -156,7 +255,7 @@ public class SecondFragment extends Fragment {
         FjgBtnListener(yure,4);
         FjgBtnListener(bengzhan,5);
         FjgBtnListener(chuwei,6);
-        FjgBtnListener(honggan,7);
+        FjgBtnListener(honggan,8);
         FjgBtnListener(fuliao,9);
         FjgBtnListener(junzhong,10);
         FjgBtnListener(fudai,11);
@@ -173,15 +272,16 @@ public class SecondFragment extends Fragment {
         JsBtnListener(qingwu4,4);
         JsBtnListener(qingwu5,5);
         JsBtnListener(qingwu6,6);
-        JsBtnListener(qingwu7,7);
-        JsBtnListener(qingwu8,8);
-        JsbtnJbdListener(jiebodai);
+        JsBtnListener(shusongdai,16);
+        JsBtnListener(qingwu8,7);
+        JsBtnListener(chuliaodai,15);
+//        JsbtnJbdListener(jiebodai);
         return view;
     }
     //展示Data实体类中的数据
     //发酵罐控制部分数据展示
     private void showFjgDataInfo(Data newdata){
-        spin_fajiao.setSelection(newdata.Id%256);
+        spin_fajiao.setSelection(Integer.parseInt(newdata.Cmd)/256);
         //刷新Button
         if ((newdata.Para.get(5) & 1)==1){
             BtnShow(jiaoban,"搅拌关","#FF0000");
@@ -205,32 +305,33 @@ public class SecondFragment extends Fragment {
             BtnShow(paosui,"破碎开","#00AA44");
         }
         if ((newdata.Para.get(5) & 8)==8){
-            BtnShow(yure,"预热关","#FF0000");
-
+          //  BtnShow(yure,"预热关","#FF0000");
+            BtnShow(yure,"罐体加热关","#FF0000");
 
         }else {
-            BtnShow(yure,"预热开","#00AA44");
+            BtnShow(yure,"罐体加热开","#00AA44");
         }
         if ((newdata.Para.get(5) & 16)==16){
-            BtnShow(bengzhan,"泵站关","#FF0000");
-
+           //BtnShow(bengzhan,"泵站关","#FF0000");
+            BtnShow(bengzhan,"油泵关","#FF0000");
 
         }else {
-            BtnShow(bengzhan,"泵站开","#00AA44");
+            BtnShow(bengzhan,"油泵开","#00AA44");
         }
         if ((newdata.Para.get(5) & 32)==32){
-            BtnShow(chuwei,"除味关","#FF0000");
-
+           // BtnShow(chuwei,"除味关","#FF0000");
+            BtnShow(chuwei,"风机关","#FF0000");
 
         }else {
-            BtnShow(chuwei,"除味开","#00AA44");
+            BtnShow(chuwei,"风机开","#00AA44");
         }
-        if ((newdata.Para.get(5) & 64)==64){
-            BtnShow(honggan,"烘干关","#FF0000");
+        if ((newdata.Para.get(5) & 128)==128){
+           // BtnShow(honggan,"烘干关","#FF0000");
+            BtnShow(honggan,"油箱预热关","#FF0000");
 
 
         }else {
-            BtnShow(honggan,"烘干开","#00AA44");
+            BtnShow(honggan,"油箱预热开","#00AA44");
         }
         if ((newdata.Para.get(5) & 256)==256){
             BtnShow(fuliao,"辅料关","#FF0000");
@@ -247,39 +348,40 @@ public class SecondFragment extends Fragment {
             BtnShow(junzhong,"菌种开","#00AA44");
         }
         if ((newdata.Para.get(5) & 1024)==1024){
-            BtnShow(fudai,"辅带关","#FF0000");
-
-
+           // BtnShow(fudai,"辅带关","#FF0000");
+            BtnShow(fudai,"称重关","#FF0000");
         }else {
-            BtnShow(fudai,"辅带开","#00AA44");
+            BtnShow(fudai,"称重开","#00AA44");
         }
         if ((newdata.Para.get(5) & 2048)==2048){
-            BtnShow(pingjiao,"平绞关","#FF0000");
+           // BtnShow(pingjiao,"平绞关","#FF0000");
+            BtnShow(pingjiao,"出料关","#FF0000");
 
 
         }else {
-            BtnShow(pingjiao,"平绞开","#00AA44");
+            BtnShow(pingjiao,"出料开","#00AA44");
         }
         if ((newdata.Para.get(5) & 4096)==4096){
-            BtnShow(shusong,"输送关","#FF0000");
+           // BtnShow(shusong,"输送关","#FF0000");
+            BtnShow(shusong,"送料关","#FF0000");
 
 
         }else {
-            BtnShow(shusong,"输送开","#00AA44");
+            BtnShow(shusong,"送料开","#00AA44");
         }
         if ((newdata.Para.get(5) & 8192)==8192){
-            BtnShow(jieru,"接入关","#FF0000");
-
+          //  BtnShow(jieru,"接入关","#FF0000");
+            BtnShow(jieru,"接驳就位关","#FF0000");
 
         }else {
-            BtnShow(jieru,"接入开","#00AA44");
+            BtnShow(jieru,"接驳就位开","#00AA44");
         }
         if ((newdata.Para.get(5) & 16384)==16384){
-            BtnShow(tuichu,"退出关","#FF0000");
-
+           // BtnShow(tuichu,"退出关","#FF0000");
+            BtnShow(tuichu,"接驳脱离关","#FF0000");
 
         }else {
-            BtnShow(tuichu,"退出开","#00AA44");
+            BtnShow(tuichu,"接驳脱离开","#00AA44");
         }
         if ((newdata.Para.get(5) & 32768)==32768){
             BtnShow(baojing,"报警关","#FF0000");
@@ -291,7 +393,7 @@ public class SecondFragment extends Fragment {
     }
     //圈舍控制部分数据展示
     private void showJsDataInfo(Data newdata) {
-        spin_juanshe.setSelection((newdata.Id - 16)%256);
+        spin_juanshe.setSelection(Integer.parseInt(newdata.Cmd)/256-16);
         //刷新Button
         if ((newdata.Para.get(5) & 1)==1){
             BtnShow(qingwu1,"清污关","#FF0000");
@@ -314,7 +416,7 @@ public class SecondFragment extends Fragment {
         }else {
             BtnShow(qingwu3,"清污开","#00AA44");
         }
-        if ((newdata.Para.get(9) & 8)==8){
+        if ((newdata.Para.get(5) & 8)==8){
             BtnShow(qingwu4,"清污关","#FF0000");
 
 
@@ -335,26 +437,26 @@ public class SecondFragment extends Fragment {
         }else {
             BtnShow(qingwu6,"清污开","#00AA44");
         }
-        if ((newdata.Para.get(5) & 64)==64){
-            BtnShow(qingwu7,"清污关","#FF0000");
+        if ((newdata.Para.get(5) & 32768)==32768){
+            BtnShow(shusongdai,"输送带关","#FF0000");
 
 
         }else {
-            BtnShow(qingwu7,"清污开","#00AA44");
+            BtnShow(shusongdai,"输送带开","#00AA44");
         }
-        if ((newdata.Para.get(5) & 128)==128){
+        if ((newdata.Para.get(5) & 64)==64){
             BtnShow(qingwu8,"清污关","#FF0000");
 
 
         }else {
             BtnShow(qingwu8,"清污开","#00AA44");
         }
-        if ((newdata.Para.get(5) & 32768)==32768){
-            BtnShow(jiebodai,"接驳带关","#FF0000");
+        if ((newdata.Para.get(5) & 16384)==16384){
+            BtnShow(chuliaodai,"出料带关","#FF0000");
 
 
         }else {
-            BtnShow(jiebodai,"接驳带开","#00AA44");
+            BtnShow(chuliaodai,"出料带开","#00AA44");
         }
     }
     //发酵罐Spinner点击事件
@@ -368,7 +470,6 @@ public class SecondFragment extends Fragment {
                 }
                 Toast.makeText(getActivity(), "你正在操作发酵罐：" + cardNumber, Toast.LENGTH_SHORT).show();
                 String inputx= spin_fajiao.getSelectedItem().toString();
-                Log.e("手动设置发酵罐：",inputx);
                 Integer x=Integer.parseInt(inputx);
                 Integer Id=username*256+x;
                 Integer Cmd=mynum*256+112;
@@ -384,6 +485,7 @@ public class SecondFragment extends Fragment {
                     Utility.SetCommandJson(Id,Cmd,jsonArray),
                     0,
                     false);
+                Log.e("手动设置发酵罐：", Utility.SetCommandJson(Id,Cmd,jsonArray));
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -396,10 +498,25 @@ public class SecondFragment extends Fragment {
                             showFjgDataInfo(newdata);//刷新界面
                             prefs.edit().clear().commit();//清除SharedPreferences数据
                         }else {
-                            Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //从SharedPreferences读取数据
+                                    prefs=getActivity().getSharedPreferences("datastore",0);
+                                    String  dataString=prefs.getString("data","");
+                                    if (dataString!="") {
+                                        Log.e("刷新延时数据读取", dataString);
+                                        newdata = Utility.handleDataResponse(dataString);
+                                        showFjgDataInfo(newdata);
+                                        prefs.edit().clear().commit();//清除SharedPreferences数据
+                                    }else {
+                                        Toast.makeText(getActivity(), "获取数据失败，请刷新界面并确保设备已上线！", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            },1000);
                         }
                     }
-                },500);
+                },1000);
             }
 
             @Override
@@ -442,10 +559,26 @@ public class SecondFragment extends Fragment {
                             showFjgDataInfo(newdata);//刷新界面
                             prefs.edit().clear().commit();//清除SharedPreferences数据
                         }else {
-                            Toast.makeText(getActivity(), "获取数据失败，请先刷新界面或检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getActivity(), "延时1秒刷新！", Toast.LENGTH_SHORT).show();
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //从SharedPreferences读取数据
+                                    prefs=getActivity().getSharedPreferences("datastore",0);
+                                    String dataString=prefs.getString("data","");
+                                    if (dataString!="") {
+                                        Log.e("发酵罐按钮延时数据读取", dataString);
+                                        newdata = Utility.handleDataResponse(dataString);
+                                        showFjgDataInfo(newdata);
+                                        prefs.edit().clear().commit();//清除SharedPreferences数据
+                                    }else {
+                                        Toast.makeText(getActivity(), "当前网络不佳，请刷新界面！", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            },1000);
                         }
                     }
-                },500);
+                },1000);
             }
         });
     }
@@ -487,11 +620,26 @@ public class SecondFragment extends Fragment {
                            showJsDataInfo(newdata);//刷新界面
                             prefs.edit().clear().commit();//清除SharedPreferences数据
                         }else {
-                            Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //从SharedPreferences读取数据
+                                    prefs=getActivity().getSharedPreferences("datastore",0);
+                                    String  dataString=prefs.getString("data","");
+                                    if (dataString!="") {
+                                        Log.e("刷新延时数据读取", dataString);
+                                        newdata = Utility.handleDataResponse(dataString);
+                                        showJsDataInfo(newdata);
+                                        prefs.edit().clear().commit();//清除SharedPreferences数据
+                                    }else {
+                                        Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            },1000);
                         }
 
                     }
-                },500);
+                },1000);
             }
 
             @Override
@@ -534,51 +682,81 @@ public class SecondFragment extends Fragment {
                             showJsDataInfo(newdata);//刷新界面
                             prefs.edit().clear().commit();//清除SharedPreferences数据
                         }else {
-                            Toast.makeText(getActivity(), "获取数据失败，请先刷新界面或检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //从SharedPreferences读取数据
+                                    prefs=getActivity().getSharedPreferences("datastore",0);
+                                    String  dataString=prefs.getString("data","");
+                                    if (dataString!="") {
+                                        Log.e("刷新延时数据读取", dataString);
+                                        newdata = Utility.handleDataResponse(dataString);
+                                        showJsDataInfo(newdata);
+                                        prefs.edit().clear().commit();//清除SharedPreferences数据
+                                    }else {
+                                        Toast.makeText(getActivity(), "当前网络不佳，请刷新界面！", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            },1000);
                         }
                     }
-                },500);
+                },1000);
             }
         });
     }
     //圈舍控制部分接驳带按钮点击事件
-    private void JsbtnJbdListener(final Button btn){
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Integer Id=username*256+1;
-                Integer Cmd=mynum*256+67;
-                JSONArray jsonArray=new JSONArray();
-                int P10=Utility.MySecret(65535,Id);
-                int P11=Utility.MySecret(P10,Cmd);
-                int P1=Utility.MySecret(P11,13);
-                jsonArray.put(P1);
-                jsonArray.put(13);
-                MyMqttClient.sharedCenter().setSendData(
-                fabutopic,
-                Utility.SetCommandJson(Id,Cmd,jsonArray),
-                0,
-                false);
-                Log.e("Btn","圈舍已发送指令:"+Utility.SetCommandJson(Id,Cmd,jsonArray));
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        //从SharedPreferences读取数据
-                        prefs=getActivity().getSharedPreferences("datastore",0);
-                        String dataString=prefs.getString("data","");
-                        if (dataString!=""){
-                            Log.e("圈舍按钮数据读取",dataString);
-                            newdata=Utility.handleDataResponse(dataString);
-                            showJsDataInfo(newdata);//刷新界面
-                            prefs.edit().clear().commit();//清除SharedPreferences数据
-                        }else {
-                            Toast.makeText(getActivity(), "获取数据失败，请先刷新界面或检查设备是否上线！", Toast.LENGTH_SHORT).show();
-                        }
-
-                    }
-                },500);
-            }
-        });
-
-    }
+//    private void JsbtnJbdListener(final Button btn){
+//        btn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Integer Id=username*256+1;
+//                Integer Cmd=mynum*256+67;
+//                JSONArray jsonArray=new JSONArray();
+//                int P10=Utility.MySecret(65535,Id);
+//                int P11=Utility.MySecret(P10,Cmd);
+//                int P1=Utility.MySecret(P11,13);
+//                jsonArray.put(P1);
+//                jsonArray.put(13);
+//                MyMqttClient.sharedCenter().setSendData(
+//                fabutopic,
+//                Utility.SetCommandJson(Id,Cmd,jsonArray),
+//                0,
+//                false);
+//                Log.e("Btn","圈舍已发送指令:"+Utility.SetCommandJson(Id,Cmd,jsonArray));
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        //从SharedPreferences读取数据
+//                        prefs=getActivity().getSharedPreferences("datastore",0);
+//                        String dataString=prefs.getString("data","");
+//                        if (dataString!=""){
+//                            Log.e("圈舍按钮数据读取",dataString);
+//                            newdata=Utility.handleDataResponse(dataString);
+//                            showJsDataInfo(newdata);//刷新界面
+//                            prefs.edit().clear().commit();//清除SharedPreferences数据
+//                        }else {
+//                            new Handler().postDelayed(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    //从SharedPreferences读取数据
+//                                    prefs=getActivity().getSharedPreferences("datastore",0);
+//                                    String  dataString=prefs.getString("data","");
+//                                    if (dataString!="") {
+//                                        Log.e("刷新延时数据读取", dataString);
+//                                        newdata = Utility.handleDataResponse(dataString);
+//                                        showJsDataInfo(newdata);
+//                                        prefs.edit().clear().commit();//清除SharedPreferences数据
+//                                    }else {
+//                                        Toast.makeText(getActivity(), "当前网络不佳，请刷新界面！", Toast.LENGTH_SHORT).show();
+//                                    }
+//                                }
+//                            },1000);
+//                        }
+//
+//                    }
+//                },1000);
+//            }
+//        });
+//
+//    }
 }

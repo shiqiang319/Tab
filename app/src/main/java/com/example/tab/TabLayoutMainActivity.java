@@ -1,8 +1,11 @@
 package com.example.tab;
 
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -53,6 +56,9 @@ public class TabLayoutMainActivity extends AppCompatActivity implements CustomAd
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //熄屏
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
+                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
        // Toolbar toolbar=findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
@@ -90,8 +96,6 @@ public class TabLayoutMainActivity extends AppCompatActivity implements CustomAd
             }
         });
         startTimerSubscribeTopic();//定时订阅主题
-        //MyMqttClient.sharedCenter().setUnSubscribe("/sys/a1S917F388O/shebei/thing/service/property/set");//取消订阅消息
-        MyMqttClient.sharedCenter().setUnSubscribe(dingyuetopic);//取消订阅消息
     }
 
     private void initView() {
@@ -235,5 +239,15 @@ public class TabLayoutMainActivity extends AppCompatActivity implements CustomAd
         super.onPause();
         stopTimerSubscribeTopic();
     }
+    //字体大小不随系统改变
+    @Override
+    public Resources getResources() {
+        Resources resources = super.getResources();
+        Configuration configuration = new Configuration();
+        configuration.setToDefaults();
+        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+        return resources;
+    }
+
 }
 

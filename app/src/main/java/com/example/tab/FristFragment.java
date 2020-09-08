@@ -3,6 +3,9 @@ package com.example.tab;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -40,14 +43,16 @@ public class FristFragment extends Fragment {
     private Spinner  spinner;
     private TextView dangqianwendu;
     private TextView chenxuduan;
-    private TextView yali;
+    private TextView xiaciqingwu;
     private TextView shengyushijian;
     private TextView yunxing;
     private TextView guzhang;
+    private TextView fuliao;
+    private TextView junzhong;
     private Button   shangliao;
     private Button   xieliao;
     private Button   fajiao;
-    private Button   qingwu;
+    private Button   fajiaoguanzanting;
     private Button   zidong;
     private Button   zanting;
     private SwipeRefreshLayout swipeRefresh;
@@ -71,14 +76,16 @@ public class FristFragment extends Fragment {
         spinner=view.findViewById(R.id.Spi);
         dangqianwendu=view.findViewById(R.id.Tv_DangqiqnWendu);
         chenxuduan=view.findViewById(R.id.Tv_ChengXuDuan);
-        yali=view.findViewById(R.id.TV_YaLi);
+        xiaciqingwu=view.findViewById(R.id.TV_Xiciqingwu);
         shengyushijian=view.findViewById(R.id.Tv_ShengyuShijian);
         yunxing=view.findViewById(R.id.TV_Yunxing);
         guzhang=view.findViewById(R.id.Tv_GuZhang);
+        fuliao=view.findViewById(R.id.Tv_Fuliao);
+        junzhong=view.findViewById(R.id.Tv_Junzhong);
         shangliao=view.findViewById(R.id.btn2);
         xieliao=view.findViewById(R.id.btn3);
         fajiao= view.findViewById(R.id.btn4);
-        qingwu=view.findViewById(R.id.btn5);
+        fajiaoguanzanting=view.findViewById(R.id.btn5);
         zidong=view.findViewById(R.id.btn6);
         zanting=view.findViewById(R.id.btn7);
         swipeRefresh=view.findViewById(R.id.swipe_refresh);
@@ -98,7 +105,27 @@ public class FristFragment extends Fragment {
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-               Utility.requestData();//发送请求
+              // Utility.requestData();//发送请求
+                String inputx= spinner.getSelectedItem().toString();
+                Integer x=Integer.parseInt(inputx);
+                if (x==0){
+                    swipeRefresh.setRefreshing(false);
+                    return;
+                }
+                Integer Id=username*256+x;
+                Integer Cmd=mynum*256+112;
+                JSONArray jsonArray=new JSONArray();
+                int P10=Utility.MySecret(65535,Id);
+                int P11=Utility.MySecret(P10,Cmd);
+                int P1=Utility.MySecret(P11,1);
+                jsonArray.put(P1);
+                jsonArray.put(1);
+                MyMqttClient.sharedCenter().setSendData(
+                        fabutopic,
+                        Utility.SetCommandJson(Id,Cmd,jsonArray),
+                        0,
+                        false);
+                Log.e("下拉刷新","已发送查询指令:"+ Utility.SetCommandJson(Id,Cmd,jsonArray));
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -111,39 +138,65 @@ public class FristFragment extends Fragment {
                             showDataInfo(newdata);
                             prefs.edit().clear().commit();//清除SharedPreferences数据
                         }else {
-                            Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //从SharedPreferences读取数据
+                                    prefs=getActivity().getSharedPreferences("datastore",0);
+                                    dataString=prefs.getString("data","");
+                                    if (dataString!="") {
+                                        Log.e("刷新延时数据读取", dataString);
+                                        newdata = Utility.handleDataResponse(dataString);
+                                        showDataInfo(newdata);
+                                        prefs.edit().clear().commit();//清除SharedPreferences数据
+                                    }else {
+                                       // Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            },1000);
                         }
                         swipeRefresh.setRefreshing(false);
                     }
-                },500);
+                },1000);
             }
         });
 
         //按钮点击
         SpiListener(spinner);
-        BtnListener1(shangliao,"启动上料",97,"停止上料",96);
+        BtnListener1(shangliao,"启动进料",97,"停止进料",96);
         BtnListener1(xieliao,"启动卸料",99,"停止卸料",96);
         BtnListener1(fajiao,"启动发酵",49,"停止发酵",96);
-        BtnListener1(qingwu,"启动清污",145,"停止清污",147);
+        BtnListener1(fajiaoguanzanting,"发酵罐暂停",98,"发酵罐恢复",97);
         BtnListener2(zidong,"自动运行",161,160);
-        BtnListener2(zanting,"暂停运行",162,161);
+        BtnListener2(zanting,"暂停送料",162,161);
 
         return view;
     }
     //展示Data实体类中的数据
     private void showDataInfo(Data newdata){
-        spinner.setSelection(newdata.Id%256);
+        spinner.setSelection(Integer.parseInt(newdata.Cmd)/256);
         //刷新TextView
         chenxuduan.setText(newdata.Para.get(2).toString());
         shengyushijian.setText(newdata.Para.get(3).toString());
         dangqianwendu.setText(newdata.Para.get(6).toString());
+        xiaciqingwu.setText(newdata.Para.get(9).toString());
         yunxing.setText(newdata.Para.get(1).toString());
         guzhang.setText(newdata.Para.get(10).toString());
-        if ((newdata.Para.get(4) & 8)==8){
-            yali.setText("正常");
+        if ((newdata.Para.get(4) & 16)!=0){
+            junzhong.setText("正常");
+            junzhong.setTextColor(Color.parseColor("#00AA44"));
 
         }else{
-            yali.setText("欠压");
+            junzhong.setText("不足");
+            junzhong.setTextColor(Color.parseColor("#FF0000"));
+        }
+        if ((newdata.Para.get(4) & 32)!=0){
+            fuliao.setText("正常");
+            fuliao.setTextColor(Color.parseColor("#00AA44"));
+
+        }else{
+            fuliao.setText("不足");
+            fuliao .setTextColor(Color.parseColor("#FF0000"));
         }
         //刷新Button
         if ((newdata.Para.get(1) & 2)==2){
@@ -155,14 +208,14 @@ public class FristFragment extends Fragment {
         }
 
         if ((newdata.Para.get(1) & 1)==1){
-            BtnShow(shangliao,"停止上料","#FF0000");
+            BtnShow(shangliao,"停止进料","#FF0000");
 
 
         }else {
-            BtnShow(shangliao,"启动上料","#00AA44");
+            BtnShow(shangliao,"启动进料","#00AA44");
         }
 
-        if ((newdata.Para.get(1) & 16)==16){
+        if ((newdata.Para.get(1) & 208)!=0){
             BtnShow(fajiao,"停止发酵","#FF0000");
 
 
@@ -172,12 +225,12 @@ public class FristFragment extends Fragment {
         }else {
             BtnShow(fajiao,"启动发酵","#00AA44");
         }
-        if ((newdata.Para.get(5) & 4096)==4096){
-            BtnShow(qingwu,"停止清污","#FF0000");
+        if ((newdata.Para.get(1) & 4096)!=0){
+            BtnShow(fajiaoguanzanting,"发酵罐恢复","#FF0000");
 
 
         }else {
-            BtnShow(qingwu,"启动清污","#00AA44");
+            BtnShow(fajiaoguanzanting,"发酵罐暂停","#00AA44");
         }
         if ((newdata.Para.get(1) & 16384)!=0){
             BtnShow(zidong,"停止运行","#FF0000");
@@ -186,12 +239,12 @@ public class FristFragment extends Fragment {
         }else {
             BtnShow(zidong,"自动运行","#00AA44");
         }
-        if ((newdata.Para.get(1) & 12288)!=0){
-            BtnShow(zanting,"暂停恢复","#FF6600");
+        if ((newdata.Para.get(1) & 8192)!=0){
+            BtnShow(zanting,"恢复送料","#FF6600");
 
 
         }else {
-            BtnShow(zanting,"暂停运行","#00AA44");
+            BtnShow(zanting,"暂停送料","#00AA44");
         }
 
 
@@ -234,11 +287,26 @@ public class FristFragment extends Fragment {
                             showDataInfo(newdata);//刷新界面
                             prefs.edit().clear().commit();//清除SharedPreferences数据
                         }else {
-                            Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //从SharedPreferences读取数据
+                                    prefs=getActivity().getSharedPreferences("datastore",0);
+                                    dataString=prefs.getString("data","");
+                                    if (dataString!="") {
+                                        Log.e("刷新延时数据读取", dataString);
+                                        newdata = Utility.handleDataResponse(dataString);
+                                        showDataInfo(newdata);
+                                        prefs.edit().clear().commit();//清除SharedPreferences数据
+                                    }else {
+                                        Toast.makeText(getActivity(), "获取数据失败，请刷新界面并确保设备已上线！", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            },1000);
                         }
                     }
-                },500);
-
+                },1000);
+                handler.postDelayed(runnable,2000);
             }
 
             @Override
@@ -255,7 +323,6 @@ public class FristFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 String inputx= spinner.getSelectedItem().toString();
-                Log.e("选择发酵罐：",inputx);
                 Integer x=Integer.parseInt(inputx);
                 if (btn.getText().equals(function1)){
                     para=f1para;
@@ -287,11 +354,27 @@ public class FristFragment extends Fragment {
                             showDataInfo(newdata);//刷新界面
                             prefs.edit().clear().commit();//清除SharedPreferences数据
                         }else {
-                            Toast.makeText(getActivity(), "获取数据失败，请先刷新界面或检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //从SharedPreferences读取数据
+                                    prefs=getActivity().getSharedPreferences("datastore",0);
+                                    dataString=prefs.getString("data","");
+                                    if (dataString!="") {
+                                        Log.e("刷新延时数据读取", dataString);
+                                        newdata = Utility.handleDataResponse(dataString);
+                                        showDataInfo(newdata);
+                                        prefs.edit().clear().commit();//清除SharedPreferences数据
+                                    }else {
+                                       // Toast.makeText(getActivity(), "当前网络不佳，请刷新界面！", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            },1000);
+
                         }
 
                     }
-                },500);
+                },1000);
             }
         });
 
@@ -340,11 +423,26 @@ public class FristFragment extends Fragment {
                             showDataInfo(newdata);//刷新界面
                             prefs.edit().clear().commit();//清除SharedPreferences数据
                         }else {
-                            Toast.makeText(getActivity(), "获取数据失败，请先刷新界面或检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //从SharedPreferences读取数据
+                                    prefs=getActivity().getSharedPreferences("datastore",0);
+                                    String dataString=prefs.getString("data","");
+                                    if (dataString!="") {
+                                        Log.e("刷新延时数据读取", dataString);
+                                        newdata = Utility.handleDataResponse(dataString);
+                                        showDataInfo(newdata);
+                                        prefs.edit().clear().commit();//清除SharedPreferences数据
+                                    }else {
+                                      //  Toast.makeText(getActivity(), "当前网络不佳，请刷新界面！", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            },1000);
                         }
 
                     }
-                },500);
+                },1000);
             }
         });
     }
@@ -359,4 +457,62 @@ public class FristFragment extends Fragment {
             }
         }
     };
+    final Handler handler=new Handler();
+    Runnable runnable=new Runnable() {
+        @Override
+        public void run() {
+            String inputx= spinner.getSelectedItem().toString();
+            Integer x=Integer.parseInt(inputx);
+            if (x==0){
+                swipeRefresh.setRefreshing(false);
+                return;
+            }
+            Integer Id=username*256+x;
+            Integer Cmd=mynum*256+112;
+            JSONArray jsonArray=new JSONArray();
+            int P10=Utility.MySecret(65535,Id);
+            int P11=Utility.MySecret(P10,Cmd);
+            int P1=Utility.MySecret(P11,1);
+            jsonArray.put(P1);
+            jsonArray.put(1);
+            MyMqttClient.sharedCenter().setSendData(
+                    fabutopic,
+                    Utility.SetCommandJson(Id,Cmd,jsonArray),
+                    0,
+                    false);
+            Log.e("定时器刷新","已发送查询指令:"+ Utility.SetCommandJson(Id,Cmd,jsonArray));
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    //从SharedPreferences读取数据
+                    prefs=getActivity().getSharedPreferences("datastore",0);
+                    dataString=prefs.getString("data","");
+                    if (dataString!="") {
+                        Log.e("刷新数据读取", dataString);
+                        newdata = Utility.handleDataResponse(dataString);
+                        if ((Integer.parseInt(newdata.Cmd)/256)==Integer.parseInt(spinner.getSelectedItem().toString())){
+                            showDataInfo(newdata);
+                        }
+                        prefs.edit().clear().commit();//清除SharedPreferences数据
+                    }else {
+                       // Toast.makeText(getActivity(), "获取数据失败，请检查设备是否上线！", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            },2000);
+            handler.postDelayed(this,2000);
+        }
+    };
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if (isVisibleToUser) {
+            Log.e("FristFragment","可见");
+            handler.postDelayed(runnable,2000);//定时器开
+        }else {
+            Log.e("FristFragment","不可见");
+           handler.removeCallbacks(runnable);//定时器关
+        }
+    }
+
 }

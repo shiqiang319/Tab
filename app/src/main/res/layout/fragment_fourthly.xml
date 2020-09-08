@@ -44,8 +44,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="140dp"
                 android:textSize="20sp"
-                android:hint="P3"
-                android:maxLength="3"
+                android:hint="P03"
+                android:maxLength="4"
                 android:maxLines="1"
                 android:inputType="number"
                 android:background="@drawable/edit_bg" />
@@ -62,8 +62,8 @@
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:layout_marginLeft="290dp"
-                android:hint="P4"
-                android:maxLength="3"
+                android:hint="P04"
+                android:maxLength="4"
                 android:maxLines="1"
                 android:inputType="number"
                 android:background="@drawable/edit_bg"/>
@@ -85,8 +85,8 @@
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:layout_marginLeft="140dp"
-                android:hint="P5"
-                android:maxLength="3"
+                android:hint="P05"
+                android:maxLength="4"
                 android:maxLines="1"
                 android:inputType="number"
                 android:background="@drawable/edit_bg"/>
@@ -103,8 +103,8 @@
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:layout_marginLeft="290dp"
-                android:hint="P6"
-                android:maxLength="3"
+                android:hint="P06"
+                android:maxLength="4"
                 android:maxLines="1"
                 android:inputType="number"
                 android:background="@drawable/edit_bg"/>
@@ -126,15 +126,15 @@
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:layout_marginLeft="140dp"
-                android:hint="P7"
-                android:maxLength="3"
+                android:hint="P07"
+                android:maxLength="4"
                 android:maxLines="1"
                 android:inputType="number"
                 android:background="@drawable/edit_bg"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="菌种限重"
+                android:text="菌种限温"
                 android:textColor="#000000"
                 android:textSize="20sp"
                 android:layout_marginLeft="200dp"/>
@@ -145,8 +145,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="290dp"
                 android:background="@drawable/edit_bg"
-                android:hint="P8"
-                android:maxLength="3"
+                android:hint="P08"
+                android:maxLength="4"
                 android:maxLines="1"
                 android:inputType="number"
                 android:textSize="20sp" />
@@ -170,7 +170,7 @@
                 android:layout_marginLeft="140dp"
                 android:background="@drawable/edit_bg"
                 android:hint="P12"
-                android:maxLength="3"
+                android:maxLength="4"
                 android:maxLines="1"
                 android:inputType="number"
                 android:textSize="20sp" />
@@ -189,7 +189,7 @@
                 android:textSize="20sp"
                 android:layout_marginLeft="290dp"
                 android:hint="P13"
-                android:maxLength="3"
+                android:maxLength="4"
                 android:maxLines="1"
                 android:inputType="number"
                 android:background="@drawable/edit_bg"/>
@@ -201,7 +201,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="上料限时"
+                android:text="进料限时"
                 android:textColor="#000000"
                 android:textSize="20sp"
                 android:layout_marginLeft="50dp"/>
@@ -212,7 +212,7 @@
                 android:textSize="20sp"
                 android:layout_marginLeft="140dp"
                 android:hint="P10"
-                android:maxLength="3"
+                android:maxLength="4"
                 android:maxLines="1"
                 android:inputType="number"
                 android:background="@drawable/edit_bg"/>
@@ -230,7 +230,7 @@
                 android:textSize="20sp"
                 android:layout_marginLeft="290dp"
                 android:hint="P11"
-                android:maxLength="3"
+                android:maxLength="4"
                 android:maxLines="1"
                 android:inputType="number"
                 android:background="@drawable/edit_bg"/>
@@ -242,9 +242,9 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="开机限时"
+                android:text="预热限时/s"
                 android:textColor="#000000"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:layout_marginLeft="50dp"/>
             <EditText
                 android:id="@+id/et_kjxs"
@@ -253,16 +253,16 @@
                 android:textSize="20sp"
                 android:layout_marginLeft="140dp"
                 android:hint="P14"
-                android:maxLength="3"
+                android:maxLength="4"
                 android:maxLines="1"
                 android:inputType="number"
                 android:background="@drawable/edit_bg"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="接驳限时"
+                android:text="接驳限时/s"
                 android:textColor="#000000"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:layout_marginLeft="200dp"/>
             <EditText
                 android:id="@+id/et_jbxs"
@@ -270,8 +270,8 @@
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:layout_marginLeft="290dp"
-                android:hint="P9"
-                android:maxLength="3"
+                android:hint="P09"
+                android:maxLength="4"
                 android:maxLines="1"
                 android:inputType="number"
                 android:background="@drawable/edit_bg"/>
@@ -295,7 +295,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="程序段数"
+                android:text="发酵循环"
                 android:textColor="#000000"
                 android:textSize="20sp"
                 android:layout_marginLeft="50dp"/>
@@ -306,10 +306,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="140dp"
                 android:background="@drawable/edit_bg"
-                android:hint="P2"
-                android:maxLength="3"
-                android:maxLines="1"
+                android:hint="P02"
                 android:inputType="number"
+                android:maxLength="4"
+                android:maxLines="1"
                 android:textSize="20sp" />
         </RelativeLayout>
         <RelativeLayout
@@ -319,7 +319,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="1段开机"
+                android:text="开机"
                 android:textColor="#000000"
                 android:textSize="20sp"
                 android:layout_marginLeft="50dp"/>
@@ -327,10 +327,10 @@
                 android:id="@+id/et_1dkj"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:layout_marginLeft="130dp"
+                android:textSize="18sp"
+                android:layout_marginLeft="140dp"
                 android:hint="P16"
-                android:maxLength="3"
+                android:maxLength="4"
                 android:inputType="number"
                 android:background="@drawable/edit_bg"/>
             <TextView
@@ -344,10 +344,10 @@
                 android:id="@+id/et_1gj"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:layout_marginLeft="250dp"
                 android:hint="P15"
-                android:maxLength="3"
+                android:maxLength="4"
                 android:maxLines="1"
                 android:inputType="number"
                 android:background="@drawable/edit_bg"/>
@@ -365,36 +365,36 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="2段开机"
+                android:text="送出延时/s"
                 android:textColor="#000000"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:layout_marginLeft="50dp"/>
             <EditText
                 android:id="@+id/et_2dkj"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:layout_marginLeft="130dp"
+                android:textSize="18sp"
+                android:layout_marginLeft="140dp"
                 android:hint="P18"
-                android:maxLength="3"
+                android:maxLength="4"
                 android:maxLines="1"
                 android:inputType="number"
                 android:background="@drawable/edit_bg"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="关机"
+                android:text="加热限时"
                 android:textColor="#000000"
-                android:textSize="20sp"
-                android:layout_marginLeft="200dp"/>
+                android:textSize="18sp"
+                android:layout_marginLeft="180dp"/>
             <EditText
                 android:id="@+id/et_2gj"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:layout_marginLeft="250dp"
                 android:hint="P17"
-                android:maxLength="3"
+                android:maxLength="4"
                 android:maxLines="1"
                 android:inputType="number"
                 android:background="@drawable/edit_bg"/>
@@ -432,21 +432,21 @@
                 android:id="@+id/cb_2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="粪污"
+                android:text="卸料"
                 android:textSize="20sp"
                 android:layout_marginLeft="120dp"/>
             <CheckBox
                 android:id="@+id/cb_3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="辅料"
+                android:text="保护"
                 android:textSize="20sp"
                 android:layout_marginLeft="190dp"/>
             <CheckBox
                 android:id="@+id/cb_4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="菌种"
+                android:text="扩展"
                 android:textSize="20sp"
                 android:layout_marginLeft="260dp"/>
 

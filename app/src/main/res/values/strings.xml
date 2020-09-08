@@ -28,7 +28,7 @@
     <string name="chengxuduan">程 序 段</string>
     <string name="shengyushijian">剩余时间</string>
     <string name="dangqianwendu">当前温度</string>
-    <string name="dangqianyali">当前压力</string>
+    <string name="xiaciqingwu">下次清污</string>
     <string name="yunxingzhuangtai">运行状态</string>
     <string name="guzhangzhuangtai">故障状态</string>
     <string name="qidongshangliao">启动上料</string>
