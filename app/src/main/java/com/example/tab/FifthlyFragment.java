@@ -54,7 +54,7 @@ public class FifthlyFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.fragment_fifthly, null);
+        View view=inflater.inflate(R.layout.fragment_fifthly2, null);
         swipeRefresh=view.findViewById(R.id.swipe_refresh5);
         fjgsl=view.findViewById(R.id.xt_fjgsl);
         qssl=view.findViewById(R.id.xt_qssl);
